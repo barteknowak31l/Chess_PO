@@ -29,11 +29,12 @@ const std::set<Piece*>& Piece::getInstances()
 }
 
 
-void Piece::drawPieces(sf::RenderTarget& target)
+void Piece::drawPieces(sf::RenderTarget& target, Board &b)
 {
 
 	for(Piece* p : Piece::getInstances())
 	{
+		p->sprite.setPosition(b.getPiecesPositions(p->positionOnBoard.getX(),p->positionOnBoard.getY()));
 		target.draw(p->sprite);
 	}
 }

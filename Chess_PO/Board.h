@@ -9,8 +9,18 @@
 class Board
 {
 private:
-	int _b[8][8];
-	sf::RectangleShape fields[64];
+
+	//positions on board are stored as follows
+	// 0 1 2 3 4 5 6 7
+	// 8 9 10 11 12 ...
+	//.
+	//.
+	//.
+	//...     61 62 63
+
+	int _b[8][8];						
+	sf::RectangleShape fields[8][8];
+	sf::Vector2f piecesPositions[8][8];
 
 public:
 	void init();
@@ -22,6 +32,14 @@ public:
 	void reverse();
 
 	void drawBoard(sf::RenderTarget& target);
+
+	sf::Vector2f boardToScreenPos(int, int);
+
+	void calculatePiecesPositions();
+
+
+	//getters
+	sf::Vector2f getPiecesPositions(int,int);
 
 };
 

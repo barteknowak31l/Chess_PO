@@ -5,6 +5,9 @@
 #include <SFML\Graphics.hpp>
 #include <set>
 
+#include "Board.h"
+
+
 class Piece : sf::Drawable
 {
 private:
@@ -12,7 +15,7 @@ private:
 
 protected:
 	static std::set<Piece*> instances;
-	Coordinates position;
+	Coordinates positionOnBoard;
 	sf::Sprite sprite;
 
 	void draw(sf::RenderTarget&, sf::RenderStates) const override;
@@ -25,7 +28,7 @@ public:
 	virtual void move(Coordinates) = 0;
 
 	static const std::set<Piece*>& getInstances();
-	static void drawPieces(sf::RenderTarget&);
+	static void drawPieces(sf::RenderTarget&,Board&);
 
 
 

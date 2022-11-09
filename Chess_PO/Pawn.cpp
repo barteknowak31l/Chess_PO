@@ -6,11 +6,11 @@ Pawn::Pawn()
 	return;
 }
 
-Pawn::Pawn(int x, int y, int color, int i) 
+Pawn::Pawn(int x, int y, int color) 
 {
 
-	position.setX(x);
-	position.setY(y);
+	positionOnBoard.setX(x);
+	positionOnBoard.setY(y);
 	if (color)
 	{
 		texture.loadFromFile("pieces/pawn_b.png");
@@ -21,14 +21,19 @@ Pawn::Pawn(int x, int y, int color, int i)
 	}
 
 	sprite.setTexture(texture);
-	sprite.setPosition(sf::Vector2f(position.getX(), position.getY()));
+	
+	//idk czy to zadziala
+	sprite.setOrigin(texture.getSize().x / 2, texture.getSize().y / 2);
 
 
 	instances.insert(this);
+
+	std::cout << "PawnConstructor\n";
 }
 
 Pawn::~Pawn()
 {
+	std::cout << "PawnDestructor\n";
 	return;
 }
 

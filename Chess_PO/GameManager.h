@@ -5,27 +5,26 @@
 #include "Board.h"
 #include "Pawn.h"
 
+
 class GameManager
 {
 private:
-	//GRAPHICS
-	static int piecesPositions[];
+
 
 	//GameObjects
 	Board* board;
-	Pawn pawns[8];
+	Pawn* pawns[8];
 
 
 
 public:
+	static GameManager* instance;
 	GameManager();
 	~GameManager();
-
 	void init();
 
-	static void calculatePiecePositions(sf::RenderTarget&);
-	static int* getPiecesPositions();
-
+	//getters
+	Board& getBoard();
 
 };
 #endif
