@@ -11,7 +11,7 @@ public:
 	Bishop(int, int, int,int);
 	~Bishop();
 	bool isMoveLegal(Coordinates);
-	void setFieldsUnderAttack();
+	void findFieldsUnderAttack();
 
 };
 #endif

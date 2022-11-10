@@ -17,7 +17,7 @@ public:
 	Queen(int, int, int,int);
 	~Queen();
 	bool isMoveLegal(Coordinates);
-	void setFieldsUnderAttack();
+	void findFieldsUnderAttack();
 
 
 };

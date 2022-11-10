@@ -17,7 +17,7 @@ private:
 	~Pawn();
 
 	bool isMoveLegal(Coordinates);
-	void setFieldsUnderAttack();
+	void findFieldsUnderAttack();
 
 };
 

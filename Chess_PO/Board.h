@@ -114,10 +114,9 @@ public:
 
 	//getters
 	sf::Vector2f getPiecesPositions(int,int);
-
 	static int getPieceTypeOnGivenCoords(Coordinates);
-
 	static int getTurn();
+	static int getFieldUnderAttack(Coordinates, int);
 
 	//debug
 	static void printBoard();

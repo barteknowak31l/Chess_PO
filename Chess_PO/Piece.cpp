@@ -58,7 +58,6 @@ void Piece::update(sf::RenderWindow& target, Board& b)
 	{
 		//set fields under attack
 		//if(p->type == w_king || p->type == b_king)
-		p->setFieldsUnderAttack();
 
 		//check for mouse input
 		if (p->isActive || Piece::isSomethingActive == 0)
@@ -73,6 +72,14 @@ void Piece::update(sf::RenderWindow& target, Board& b)
 	}
 	Piece::drawPieces(target, b);
 
+}
+
+void Piece::setFieldsUnderAttack()
+{
+	for (Piece* p : getInstances())
+	{
+		p->findFieldsUnderAttack();
+	}
 }
 
 

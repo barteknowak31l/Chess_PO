@@ -168,7 +168,7 @@ bool Pawn::isMoveLegal(Coordinates c)
 	return false;
 }
 
-void Pawn::setFieldsUnderAttack()
+void Pawn::findFieldsUnderAttack()
 {
 	Coordinates tmp = positionOnBoard;
 

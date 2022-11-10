@@ -39,11 +39,12 @@ public:
 
 	//virtual methods
 	virtual bool isMoveLegal(Coordinates) = 0;
-	virtual void setFieldsUnderAttack() = 0;
+	virtual void findFieldsUnderAttack() = 0;
 
 	static const std::set<Piece*>& getInstances();
 	static void drawPieces(sf::RenderWindow&,Board&);
 	static void update(sf::RenderWindow&,Board&);
+	static void setFieldsUnderAttack();
 
 	void onClickAndHold(sf::RenderWindow&);
 	void onMouseRelease(sf::RenderWindow&);

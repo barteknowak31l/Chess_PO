@@ -47,7 +47,7 @@ bool King::isMoveLegal(Coordinates c)
 	}
 
 	//1. up
-	if (positionOnBoard.getX() == c.getX() && positionOnBoard.getY() - c.getY() == 1)
+	if (positionOnBoard.getX() == c.getX() && positionOnBoard.getY() - c.getY() == 1 && Board::getFieldUnderAttack(c, !pieceTypeToColor(type)) == 0)
 	{
 		std::cout << "king up move\n";
 		if (Board::getPieceTypeOnGivenCoords(c) != empty)
@@ -57,7 +57,7 @@ bool King::isMoveLegal(Coordinates c)
 	}
 
 	//2. up  - right
-	if (c.getX() - positionOnBoard.getX() == 1 && positionOnBoard.getY() - c.getY() == 1)
+	if (c.getX() - positionOnBoard.getX() == 1 && positionOnBoard.getY() - c.getY() == 1 && Board::getFieldUnderAttack(c, !pieceTypeToColor(type)) == 0)
 	{
 		std::cout << "king up-right move\n";
 		if (Board::getPieceTypeOnGivenCoords(c) != empty)
@@ -67,7 +67,7 @@ bool King::isMoveLegal(Coordinates c)
 	}
 
 	//3. right
-	if (c.getX() - positionOnBoard.getX() == 1 && positionOnBoard.getY() == c.getY())
+	if (c.getX() - positionOnBoard.getX() == 1 && positionOnBoard.getY() == c.getY() && Board::getFieldUnderAttack(c, !pieceTypeToColor(type)) == 0)
 	{
 		std::cout << "king right move\n";
 		if (Board::getPieceTypeOnGivenCoords(c) != empty)
@@ -77,7 +77,7 @@ bool King::isMoveLegal(Coordinates c)
 	}
 
 	//4. down  - right
-	if (c.getX() - positionOnBoard.getX() == 1 && c.getY() - positionOnBoard.getY() == 1)
+	if (c.getX() - positionOnBoard.getX() == 1 && c.getY() - positionOnBoard.getY() == 1 && Board::getFieldUnderAttack(c, !pieceTypeToColor(type)) == 0)
 	{
 		std::cout << "king down-right move\n";
 		if (Board::getPieceTypeOnGivenCoords(c) != empty)
@@ -87,7 +87,7 @@ bool King::isMoveLegal(Coordinates c)
 	}
 
 	//5. down
-	if (c.getX() == positionOnBoard.getX() && c.getY() - positionOnBoard.getY() == 1)
+	if (c.getX() == positionOnBoard.getX() && c.getY() - positionOnBoard.getY() == 1 && Board::getFieldUnderAttack(c, !pieceTypeToColor(type)) == 0)
 	{
 		std::cout << "king down move\n";
 		if (Board::getPieceTypeOnGivenCoords(c) != empty)
@@ -97,7 +97,7 @@ bool King::isMoveLegal(Coordinates c)
 	}
 
 	//6. down  - left
-	if (positionOnBoard.getX() - c.getX() == 1 && c.getY() - positionOnBoard.getY() == 1)
+	if (positionOnBoard.getX() - c.getX() == 1 && c.getY() - positionOnBoard.getY() == 1 && Board::getFieldUnderAttack(c, !pieceTypeToColor(type)) == 0)
 	{
 		std::cout << "king down-left move\n";
 		if (Board::getPieceTypeOnGivenCoords(c) != empty)
@@ -107,7 +107,7 @@ bool King::isMoveLegal(Coordinates c)
 	}
 
 	//7. left
-	if (positionOnBoard.getX() - c.getX() == 1 && c.getY() == positionOnBoard.getY() == 1)
+	if (positionOnBoard.getX() - c.getX() == 1 && c.getY() == positionOnBoard.getY() == 1 && Board::getFieldUnderAttack(c, !pieceTypeToColor(type)) == 0)
 	{
 		std::cout << "king left move\n";
 		if (Board::getPieceTypeOnGivenCoords(c) != empty)
@@ -117,7 +117,7 @@ bool King::isMoveLegal(Coordinates c)
 	}
 
 	//8. up  - left
-	if (positionOnBoard.getX() - c.getX() == 1 && positionOnBoard.getY() - c.getY() == 1)
+	if (positionOnBoard.getX() - c.getX() == 1 && positionOnBoard.getY() - c.getY() == 1 && Board::getFieldUnderAttack(c, !pieceTypeToColor(type)) == 0)
 	{
 		std::cout << "king up-left move\n";
 		if (Board::getPieceTypeOnGivenCoords(c) != empty)
@@ -135,7 +135,7 @@ bool King::isMoveLegal(Coordinates c)
 	return false;
 }
 
-void King::setFieldsUnderAttack()
+void King::findFieldsUnderAttack()
 {
 	//8 kombinacji + sprawdzenie czy nie wychodzimy poza szachownice
 	Coordinates tmp = positionOnBoard;

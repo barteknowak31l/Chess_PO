@@ -161,7 +161,7 @@ bool Rook::isMoveLegal(Coordinates c)
 	return false;
 }
 
-void Rook::setFieldsUnderAttack()
+void Rook::findFieldsUnderAttack()
 {
 	//sprawdz kazdy kierunek az do wyjscia poza plansza lub napotkania przeszkody i ustaw wszystkie mijane pola na under_attack, wlacznie z polem przeszkody
 

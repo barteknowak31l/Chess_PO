@@ -11,7 +11,7 @@ public:
 	King(int, int, int,int);
 	~King();
 	bool isMoveLegal(Coordinates);
-	void setFieldsUnderAttack();
+	void findFieldsUnderAttack();
 
 };
 #endif

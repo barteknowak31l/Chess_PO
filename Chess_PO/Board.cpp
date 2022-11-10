@@ -128,11 +128,12 @@ void Board::initPieces()
 	
 	w_queens[0] = new Queen(3, 7, 0, w_queen);
 
+	Piece::setFieldsUnderAttack();
+
 }
 
 void Board::update(sf::RenderWindow& window)
 {
-	resetFieldsUnderAttack();
 	drawBoard(window);
 	calculatePiecesPositions();
 }
@@ -255,6 +256,9 @@ void Board::move(Piece* p, Coordinates c)
 
 void Board::nextTurn()
 {
+	resetFieldsUnderAttack();
+	Piece::setFieldsUnderAttack();
+
 	if (turn == 0)
 	{
 		turn = 1;
@@ -321,6 +325,22 @@ int Board::getPieceTypeOnGivenCoords(Coordinates c)
 int Board::getTurn()
 {
 	return turn;
+}
+
+int Board::getFieldUnderAttack(Coordinates c, int color)
+{
+	if (color == 0)
+	{
+		std::cout << "checking white " << c.getX() << c.getY() << _fieldsUnderAttackByWhite[c.getY()][c.getX()] << std::endl;;
+		return _fieldsUnderAttackByWhite[c.getY()][c.getX()];
+	}
+	else if (color == 1)
+	{
+		std::cout << "checking black " << c.getX() << c.getY() << _fieldsUnderAttackByBlack[c.getY()][c.getX()] << std::endl;
+		return _fieldsUnderAttackByBlack[c.getY()][c.getX()];
+	}
+
+	return -1;
 }
 
 

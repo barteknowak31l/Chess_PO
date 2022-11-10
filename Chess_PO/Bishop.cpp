@@ -144,7 +144,7 @@ bool Bishop::isMoveLegal(Coordinates c)
 	return false;
 }
 
-void Bishop::setFieldsUnderAttack()
+void Bishop::findFieldsUnderAttack()
 {
 	//sprawdzaj w 4 kierunkach az do wyjscia z planszy albo napotkania przeszkody
 	Coordinates tmp = positionOnBoard;

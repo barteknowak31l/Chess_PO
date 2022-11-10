@@ -271,7 +271,7 @@ bool Queen::horizontalVerticalMove(Coordinates c)
 	return false;
 }
 
-void Queen::setFieldsUnderAttack()
+void Queen::findFieldsUnderAttack()
 {
 	diagonalUnderAttack();
 	horizontalVerticalUnderAttack();

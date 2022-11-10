@@ -127,7 +127,7 @@ bool Knight::isMoveLegal(Coordinates c)
 	return false;
 }
 
-void Knight::setFieldsUnderAttack()
+void Knight::findFieldsUnderAttack()
 {
 	//8 kombinacji + sprawdzenie czy dana kombinacja miesci sie na szachownicy
 	Coordinates tmp = positionOnBoard;
