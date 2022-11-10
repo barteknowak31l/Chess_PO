@@ -7,6 +7,16 @@ Coordinates::Coordinates()
 }
 Coordinates::Coordinates(int x, int y) : _x(x), _y(y) {};
 
+
+bool Coordinates::operator==(Coordinates c)
+{
+	return (getX() == c.getX() && getY() == c.getY());
+}
+bool Coordinates::operator!=(Coordinates c)
+{
+	return !operator==(c);
+}
+
 int Coordinates::getX()
 {
 	return _x;

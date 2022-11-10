@@ -1,5 +1,4 @@
 ﻿#include <SFML/Graphics.hpp>
-#include "GameManager.h"
 #include "Board.h"
 #include "Piece.h"
 #include "Pawn.h"
@@ -9,10 +8,10 @@ int main()
 {
     sf::RenderWindow window(sf::VideoMode(800, 600), "Chess!");
 
-    GameManager gm;
-    GameManager* gameManager = &gm;
-    
-    gm.init();
+
+    Board board;
+    board.setColorsofBoard(sf::Color::White,sf::Color(134,79,0,255));
+    board.init();
 
 
     while (window.isOpen())
@@ -30,14 +29,20 @@ int main()
             }
         }
 
-        //draw step
+        //update
         window.clear();
-        gm.getBoard().drawBoard(window);
-        gm.getBoard().calculatePiecesPositions();
-        
-        Piece::drawPieces(window,gm.getBoard());
-
+        board.update(window);
+        Piece::update(window,board);
         window.display();
+
+
+        //debug
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A))
+        {
+            Board::printBoard();
+        }
+
+
     }
 
     return 0;

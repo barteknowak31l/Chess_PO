@@ -13,6 +13,10 @@ public:
 	void setX(int);
 	void setY(int);
 	char xToLetters(int);
+
+	bool operator == (Coordinates const c);
+	bool operator != (Coordinates const c);
+
 };
 
 #endif

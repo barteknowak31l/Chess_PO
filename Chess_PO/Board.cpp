@@ -1,7 +1,25 @@
 #include "Board.h"
 #include "algorithm"
 #include <iostream>
+
+#include "Piece.h"
+#include "Rook.h"
 #include "Pawn.h"
+#include "Knight.h"
+#include "Bishop.h"
+#include "King.h"
+#include "Queen.h"
+
+
+sf::RectangleShape Board::fields[8][8];
+int Board::_b[8][8];
+sf::Vector2f Board::piecesPositions[8][8];
+
+Board::Board()
+{
+	color1 = sf::Color::White;
+	color2 = sf::Color::Black;
+}
 
 void Board::init()
 {
@@ -14,14 +32,14 @@ void Board::init()
 	_b[0][6] = b_knight;
 	_b[0][7] = b_rook;
 
-	_b[0][0] = b_pawn;
+	_b[1][0] = b_pawn;
 	_b[1][1] = b_pawn;
-	_b[2][2] = b_pawn;
-	_b[3][3] = b_pawn;
-	_b[4][4] = b_pawn;
-	_b[5][5] = b_pawn;
-	_b[6][6] = b_pawn;
-	_b[7][7] = b_pawn;
+	_b[1][2] = b_pawn;
+	_b[1][3] = b_pawn;
+	_b[1][4] = b_pawn;
+	_b[1][5] = b_pawn;
+	_b[1][6] = b_pawn;
+	_b[1][7] = b_pawn;
 
 
 	_b[7][0] = w_rook;
@@ -42,9 +60,70 @@ void Board::init()
 	_b[6][6] = w_pawn;
 	_b[6][7] = w_pawn;
 
+
+
+	//init piece objects
+	initPieces();
+
 }
 
-void Board::drawBoard(sf::RenderTarget& target)
+void Board::initPieces()
+{
+	//init pieces
+	b_pawns[0] = new Pawn(0, 1, 1, b_pawn);
+	b_pawns[1] = new Pawn(1, 1, 1, b_pawn);
+	b_pawns[2] = new Pawn(2, 1, 1, b_pawn);
+	b_pawns[3] = new Pawn(3, 1, 1, b_pawn);
+	b_pawns[4] = new Pawn(4, 1, 1, b_pawn);
+	b_pawns[5] = new Pawn(5, 1, 1, b_pawn);
+	b_pawns[6] = new Pawn(6, 1, 1, b_pawn);
+	b_pawns[7] = new Pawn(7, 1, 1, b_pawn);
+
+	w_pawns[0] = new Pawn(0, 6, 0, w_pawn);
+	w_pawns[1] = new Pawn(1, 6, 0, w_pawn);
+	w_pawns[2] = new Pawn(2, 6, 0, w_pawn);
+	w_pawns[3] = new Pawn(3, 6, 0, w_pawn);
+	w_pawns[4] = new Pawn(4, 6, 0, w_pawn);
+	w_pawns[5] = new Pawn(5, 6, 0, w_pawn);
+	w_pawns[6] = new Pawn(6, 6, 0, w_pawn);
+	w_pawns[7] = new Pawn(7, 6, 0, w_pawn);
+
+	b_rooks[0] = new Rook(0, 0, 1, b_rook);
+	b_rooks[1] = new Rook(7, 0, 1, b_rook);
+	
+	w_rooks[0] = new Rook(0, 7, 0, w_rook);
+	w_rooks[1] = new Rook(7, 7, 0, w_rook);
+
+	b_knights[0] = new Knight(1, 0, 1, b_knight);
+	b_knights[1] = new Knight(6, 0, 1, b_knight);
+
+	w_knights[0] = new Knight(1, 7, 0, w_knight);
+	w_knights[1] = new Knight(6, 7, 0, w_knight);
+
+	b_bishops[0] = new Bishop(2, 0, 1, b_bishop);
+	b_bishops[1] = new Bishop(5, 0, 1, b_bishop);
+
+	w_bishops[0] = new Bishop(2, 7, 0, w_bishop);
+	w_bishops[1] = new Bishop(5, 7, 0, w_bishop);
+
+	b_kings[0] = new King(4, 0, 1, b_king);
+	
+	w_kings[0] = new King(4, 7, 0, w_king);
+
+	b_queens[0] = new Queen(3, 0, 1, b_queen);
+	
+	w_queens[0] = new Queen(3, 7, 0, w_queen);
+
+}
+
+void Board::update(sf::RenderWindow& window)
+{
+	drawBoard(window);
+	calculatePiecesPositions();
+}
+
+
+void Board::drawBoard(sf::RenderWindow& target)
 {
 	//find proper size of field
 	float x = target.getSize().x * 0.75;
@@ -78,11 +157,11 @@ void Board::drawBoard(sf::RenderTarget& target)
 		{
 			if (col)
 			{
-				fields[i][j].setFillColor(sf::Color::White);
+				fields[i][j].setFillColor(color1);
 			}
 			else
 			{
-				fields[i][j].setFillColor(sf::Color::Black);
+				fields[i][j].setFillColor(color2);
 			}
 			col = !col;
 			target.draw(fields[i][j]);
@@ -91,12 +170,31 @@ void Board::drawBoard(sf::RenderTarget& target)
 
 
 	}
+
 }
 
 sf::Vector2f Board::boardToScreenPos(int x, int y)
 {
 	return fields[x][y].getPosition();
 }
+
+int* Board::screenToBoardPos(sf::Vector2f mousePos)
+{
+	for (int i = 0; i < 8; i++)
+	{
+		for (int j = 0; j < 8; j++)
+		{
+			if (fields[i][j].getGlobalBounds().contains(mousePos))
+			{
+				int* pos = new int[2];
+				pos[0] = j;
+				pos[1] = i;
+				return pos;
+			}
+		}
+	}
+}
+
 
 void Board::calculatePiecesPositions()
 {
@@ -106,19 +204,82 @@ void Board::calculatePiecesPositions()
 		{
 			piecesPositions[i][j] = sf::Vector2f(fields[i][j].getPosition().y + fields[i][j].getSize().y/2,
 												fields[i][j].getPosition().x + fields[i][j].getSize().x/2);
-
 		}
 	}
 }
 
+void Board::setColorsofBoard(sf::Color c1, sf::Color c2)
+{
+	color1 = c1;
+	color2 = c2;
+}
 
 
+void Board::move(Piece* p, Coordinates c)
+{
+	if (p->isMoveLegal(c) == 0)
+	{
+		std::cout << "NIEPOPRAWNY RUCH\n";
+		return;
+	}
+
+	std::cout<<"RUCH ZAAKCEPTOWANY!\n";
+
+	//set old logical position to empty state
+	_b[p->getPositionOnBoard().getY()][p->getPositionOnBoard().getX()] = empty;
+
+	//set new position to piece object
+	p->setPositionOnboard(c);
+
+	//set new position of piece in logical representation of board
+	_b[c.getY()][c.getX()] = p->getType();
+}
+
+void Board::capture(Coordinates c)
+{
+	//get piece on coords c
+	//destroy that piece
+	//change score - add later
+	
+	for (Piece* p : Piece::getInstances())
+	{
+		if (p->getPositionOnBoard() == c)
+		{
+			delete p;
+			return;
+		}
+	}
+
+}
 
 
 
 //getters
 sf::Vector2f Board::getPiecesPositions(int x, int y)
 {
-	std::cout << "getPiecesPositions " << x << " " << y << " results: " << piecesPositions[x][y].x<<" "<< piecesPositions[x][y].y<< std::endl;
 	return piecesPositions[x][y];
+}
+
+int Board::getPieceTypeOnGivenCoords(Coordinates c)
+{
+	return _b[c.getY()][c.getX()];
+}
+
+
+
+//debug
+void Board::printBoard()
+{
+	std::cout << "----------------------\n";
+	std::cout << "y\\x0 1 2 3 4 5 6 7\n";
+	std::cout << "----------------------\n";
+	for (int i = 0; i < 8; i++)
+	{	
+		std::cout << i << "| ";
+		for (int j = 0; j < 8; j++)
+		{
+			std::cout << _b[i][j] << " ";
+		}
+		std::cout << std::endl;
+	}
 }

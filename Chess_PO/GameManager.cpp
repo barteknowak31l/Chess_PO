@@ -28,14 +28,14 @@ void GameManager::init()
 	board->init();
 
 	//init pieces
-	pawns[0] = new Pawn(0, 1, 1);
-	pawns[1] = new Pawn(1, 1, 1);
-	pawns[2] = new Pawn(2, 1, 1);
-	pawns[3] = new Pawn(3, 1, 1);
-	pawns[4] = new Pawn(4, 1, 1);
-	pawns[5] = new Pawn(5, 1, 1);
-	pawns[6] = new Pawn(6, 1, 1);
-	pawns[7] = new Pawn(7, 1, 1);
+	//pawns[0] = new Pawn(0, 1, 1);
+	//pawns[1] = new Pawn(1, 1, 1);
+	//pawns[2] = new Pawn(2, 1, 1);
+	//pawns[3] = new Pawn(3, 1, 1);
+	//pawns[4] = new Pawn(4, 1, 1);
+	//pawns[5] = new Pawn(5, 1, 1);
+	//pawns[6] = new Pawn(6, 1, 1);
+	//pawns[7] = new Pawn(7, 1, 1);
 
 }
 

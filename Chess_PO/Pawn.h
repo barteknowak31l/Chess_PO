@@ -3,17 +3,20 @@
 
 #include "Piece.h"
 
-
+class Board;
 
 class Pawn : Piece
 {
+private:
+	bool firstMove;
+
 	public:
-	
 	sf::Texture texture;
 	Pawn();
-	Pawn(int,int,int);
+	Pawn(int,int,int,int);
 	~Pawn();
-	void move(Coordinates);
+
+	bool isMoveLegal(Coordinates);
 
 };
 
