@@ -15,7 +15,8 @@ sf::RectangleShape Board::fields[8][8];
 int Board::_b[8][8];
 sf::Vector2f Board::piecesPositions[8][8];
 int Board::turn;
-int Board::_fieldsUnderAttack[8][8];
+int Board::_fieldsUnderAttackByWhite[8][8];
+int Board::_fieldsUnderAttackByBlack[8][8];
 
 
 Board::Board()
@@ -69,7 +70,8 @@ void Board::init()
 	{
 		for (int j = 0; j < 8; j++)
 		{
-			_fieldsUnderAttack[i][j] = 0;
+			_fieldsUnderAttackByWhite[i][j] = 0;
+			_fieldsUnderAttackByBlack[i][j] = 0;
 		}
 	}
 
@@ -281,9 +283,16 @@ void Board::capture(Coordinates c)
 }
 
 //setters
-void Board::setFieldUnderAttack(Coordinates c)
+void Board::setFieldUnderAttack(Coordinates c,int color)
 {
-	_fieldsUnderAttack[c.getY()][c.getX()]++;
+	if (color == 0)
+	{
+		_fieldsUnderAttackByWhite[c.getY()][c.getX()]++;
+	}
+	else
+	{
+		_fieldsUnderAttackByBlack[c.getY()][c.getX()]++;
+	}
 }
 
 void Board::resetFieldsUnderAttack()
@@ -292,7 +301,8 @@ void Board::resetFieldsUnderAttack()
 	{
 		for (int j = 0; j < 8; j++)
 		{
-			_fieldsUnderAttack[i][j] = 0;
+			_fieldsUnderAttackByWhite[i][j] = 0;
+			_fieldsUnderAttackByBlack[i][j] = 0;
 		}
 	}
 }
@@ -332,7 +342,7 @@ void Board::printBoard()
 	}
 }
 
-void Board::printUnderAttack()
+void Board::printUnderAttackWhite()
 {
 	std::cout << "----------------------\n";
 	std::cout << "y\\x0 1 2 3 4 5 6 7\n";
@@ -342,7 +352,23 @@ void Board::printUnderAttack()
 		std::cout << i << "| ";
 		for (int j = 0; j < 8; j++)
 		{
-			std::cout << _fieldsUnderAttack[i][j] << " ";
+			std::cout << _fieldsUnderAttackByWhite[i][j] << " ";
+		}
+		std::cout << std::endl;
+	}
+}
+
+void Board::printUnderAttackBlack()
+{
+	std::cout << "----------------------\n";
+	std::cout << "y\\x0 1 2 3 4 5 6 7\n";
+	std::cout << "----------------------\n";
+	for (int i = 0; i < 8; i++)
+	{
+		std::cout << i << "| ";
+		for (int j = 0; j < 8; j++)
+		{
+			std::cout << _fieldsUnderAttackByBlack[i][j] << " ";
 		}
 		std::cout << std::endl;
 	}

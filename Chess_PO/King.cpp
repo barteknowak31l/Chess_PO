@@ -137,5 +137,74 @@ bool King::isMoveLegal(Coordinates c)
 
 void King::setFieldsUnderAttack()
 {
-	;
+	//8 kombinacji + sprawdzenie czy nie wychodzimy poza szachownice
+	Coordinates tmp = positionOnBoard;
+
+	//1. up
+	if (positionOnBoard.getY() - 1 >= 0)
+	{
+		tmp.setX(positionOnBoard.getX());
+		tmp.setY(positionOnBoard.getY() -1);
+		Board::setFieldUnderAttack(tmp, pieceTypeToColor(type));
+	}
+
+	//2. up  - right
+	if (positionOnBoard.getX() + 1 <= 7 && positionOnBoard.getY() - 1 >= 0)
+	{
+		tmp.setX(positionOnBoard.getX() + 1);
+		tmp.setY(positionOnBoard.getY() - 1);
+		Board::setFieldUnderAttack(tmp, pieceTypeToColor(type));
+	}
+
+	//3. right
+	if (positionOnBoard.getX() + 1 <= 7)
+	{
+		tmp.setX(positionOnBoard.getX() + 1);
+		tmp.setY(positionOnBoard.getY());
+		Board::setFieldUnderAttack(tmp, pieceTypeToColor(type));
+	}
+
+	//4. down  - right
+	if (positionOnBoard.getX() + 1 <= 7 && positionOnBoard.getY() + 1 <= 7)
+	{
+		tmp.setX(positionOnBoard.getX() + 1);
+		tmp.setY(positionOnBoard.getY() + 1);
+		Board::setFieldUnderAttack(tmp, pieceTypeToColor(type));
+	}
+
+
+	//5. down
+	if (positionOnBoard.getY() + 1 <= 7)
+	{
+		tmp.setX(positionOnBoard.getX());
+		tmp.setY(positionOnBoard.getY() + 1);
+		Board::setFieldUnderAttack(tmp, pieceTypeToColor(type));
+	}
+
+	//6. down  - left
+	if (positionOnBoard.getX() - 1 >= 0 && positionOnBoard.getY() + 1 <= 7)
+	{
+		tmp.setX(positionOnBoard.getX() - 1);
+		tmp.setY(positionOnBoard.getY() + 1);
+		Board::setFieldUnderAttack(tmp, pieceTypeToColor(type));
+	}
+
+	//7. left
+	if (positionOnBoard.getX() - 1 >= 0)
+	{
+		tmp.setX(positionOnBoard.getX() - 1);
+		tmp.setY(positionOnBoard.getY());
+		Board::setFieldUnderAttack(tmp, pieceTypeToColor(type));
+	}
+
+	//8. up  - left
+	if (positionOnBoard.getX() - 1 >= 0 && positionOnBoard.getY() - 1 >= 0)
+	{
+		tmp.setX(positionOnBoard.getX() - 1);
+		tmp.setY(positionOnBoard.getY() - 1);
+		Board::setFieldUnderAttack(tmp, pieceTypeToColor(type));
+	}
+
+
+
 }

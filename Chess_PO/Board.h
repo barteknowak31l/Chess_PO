@@ -30,7 +30,8 @@ private:
 	static int _b[8][8];			
 
 	//logic representations of fields under attack
-	static int _fieldsUnderAttack[8][8];
+	static int _fieldsUnderAttackByWhite[8][8];
+	static int _fieldsUnderAttackByBlack[8][8];
 
 	//fields
 	static sf::RectangleShape fields[8][8];
@@ -105,7 +106,7 @@ public:
 
 
 	//setters
-	static void setFieldUnderAttack(Coordinates);
+	static void setFieldUnderAttack(Coordinates,int);
 	static void resetFieldsUnderAttack();
 
 	//set colors of board
@@ -120,7 +121,8 @@ public:
 
 	//debug
 	static void printBoard();
-	static void printUnderAttack();
+	static void printUnderAttackWhite();
+	static void printUnderAttackBlack();
 };
 
 #endif

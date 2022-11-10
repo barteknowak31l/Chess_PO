@@ -40,7 +40,7 @@ Queen::~Queen()
 
 bool Queen::isMoveLegal(Coordinates c)
 {
-	return diagonalMove(c) || horizontalMove(c);
+	return diagonalMove(c) || horizontalVerticalMove(c);
 }
 
 
@@ -151,7 +151,7 @@ bool Queen::diagonalMove(Coordinates c)
 	return false;
 }
 
-bool Queen::horizontalMove(Coordinates c)
+bool Queen::horizontalVerticalMove(Coordinates c)
 {
 	//ruch w pionie/poziomie -> rozne x i te same y i analogicznie
 	//nie moze miec nic na drodze
@@ -273,5 +273,138 @@ bool Queen::horizontalMove(Coordinates c)
 
 void Queen::setFieldsUnderAttack()
 {
-	;
+	diagonalUnderAttack();
+	horizontalVerticalUnderAttack();
+}
+
+void Queen::diagonalUnderAttack()
+{
+	//sprawdzaj w 4 kierunkach az do wyjscia z planszy albo napotkania przeszkody
+	Coordinates tmp = positionOnBoard;
+	int i = 1;
+
+	//up right
+	while (positionOnBoard.getX() + i <= 7 && positionOnBoard.getY() - i >= 0)
+	{
+		tmp.setX(positionOnBoard.getX() + i);
+		tmp.setY(positionOnBoard.getY() - i);
+
+		Board::setFieldUnderAttack(tmp, pieceTypeToColor(type));
+
+		i++;
+
+		if (Board::getPieceTypeOnGivenCoords(tmp) != empty)
+			break;
+	}
+
+	//up left
+	i = 1;
+	while (positionOnBoard.getX() - i >= 0 && positionOnBoard.getY() - i >= 0)
+	{
+		tmp.setX(positionOnBoard.getX() - i);
+		tmp.setY(positionOnBoard.getY() - i);
+
+		Board::setFieldUnderAttack(tmp, pieceTypeToColor(type));
+
+		i++;
+
+		if (Board::getPieceTypeOnGivenCoords(tmp) != empty)
+			break;
+	}
+
+	//down right
+	i = 1;
+	while (positionOnBoard.getX() + i <= 7 && positionOnBoard.getY() + i <= 7)
+	{
+		tmp.setX(positionOnBoard.getX() + i);
+		tmp.setY(positionOnBoard.getY() + i);
+
+		Board::setFieldUnderAttack(tmp, pieceTypeToColor(type));
+
+		i++;
+
+		if (Board::getPieceTypeOnGivenCoords(tmp) != empty)
+			break;
+	}
+
+	//down left
+	i = 1;
+	while (positionOnBoard.getX() - i >= 0 && positionOnBoard.getY() + i <= 7)
+	{
+		tmp.setX(positionOnBoard.getX() - i);
+		tmp.setY(positionOnBoard.getY() + i);
+
+		Board::setFieldUnderAttack(tmp, pieceTypeToColor(type));
+
+		i++;
+
+		if (Board::getPieceTypeOnGivenCoords(tmp) != empty)
+			break;
+	}
+}
+void Queen::horizontalVerticalUnderAttack()
+{
+	//sprawdz kazdy kierunek az do wyjscia poza plansza lub napotkania przeszkody i ustaw wszystkie mijane pola na under_attack, wlacznie z polem przeszkody
+
+	Coordinates tmp = positionOnBoard;
+
+	//up
+	int i = 1;
+	while (positionOnBoard.getY() - i >= 0)
+	{
+		tmp.setX(positionOnBoard.getX());
+		tmp.setY(positionOnBoard.getY() - i);
+
+		Board::setFieldUnderAttack(tmp, pieceTypeToColor(type));
+
+		i++;
+
+		if (Board::getPieceTypeOnGivenCoords(tmp) != empty)
+			break;
+	}
+
+	//down
+	i = 1;
+	while (positionOnBoard.getY() + i <= 7)
+	{
+		tmp.setX(positionOnBoard.getX());
+		tmp.setY(positionOnBoard.getY() + i);
+
+		Board::setFieldUnderAttack(tmp, pieceTypeToColor(type));
+
+		i++;
+
+		if (Board::getPieceTypeOnGivenCoords(tmp) != empty)
+			break;
+	}
+
+	//right
+	i = 1;
+	while (positionOnBoard.getX() + i <= 7)
+	{
+		tmp.setX(positionOnBoard.getX() + i);
+		tmp.setY(positionOnBoard.getY());
+
+		Board::setFieldUnderAttack(tmp, pieceTypeToColor(type));
+
+		i++;
+
+		if (Board::getPieceTypeOnGivenCoords(tmp) != empty)
+			break;
+	}
+
+	//left
+	i = 1;
+	while (positionOnBoard.getX() - i >= 0)
+	{
+		tmp.setX(positionOnBoard.getX() - i);
+		tmp.setY(positionOnBoard.getY());
+
+		Board::setFieldUnderAttack(tmp, pieceTypeToColor(type));
+
+		i++;
+
+		if (Board::getPieceTypeOnGivenCoords(tmp) != empty)
+			break;
+	}
 }

@@ -7,7 +7,9 @@ class Queen : Piece
 {
 private:
 	bool diagonalMove(Coordinates);
-	bool horizontalMove(Coordinates);
+	bool horizontalVerticalMove(Coordinates);
+	void diagonalUnderAttack();
+	void horizontalVerticalUnderAttack();
 
 public:
 	sf::Texture texture;

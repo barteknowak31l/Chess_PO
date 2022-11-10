@@ -129,5 +129,75 @@ bool Knight::isMoveLegal(Coordinates c)
 
 void Knight::setFieldsUnderAttack()
 {
-	;
+	//8 kombinacji + sprawdzenie czy dana kombinacja miesci sie na szachownicy
+	Coordinates tmp = positionOnBoard;
+	
+	//1. |'
+	if (positionOnBoard.getX() + 1 <= 7 && positionOnBoard.getY() - 2 >= 0)
+	{
+		tmp.setX(positionOnBoard.getX() + 1);
+		tmp.setY(positionOnBoard.getY() - 2);
+		Board::setFieldUnderAttack(tmp, pieceTypeToColor(type));
+	}
+
+
+	//2. __-
+	if (positionOnBoard.getX() + 2 <= 7 && positionOnBoard.getY() - 1 >= 0)
+	{
+		tmp.setX(positionOnBoard.getX() + 2);
+		tmp.setY(positionOnBoard.getY() - 1);
+		Board::setFieldUnderAttack(tmp, pieceTypeToColor(type));
+	}
+
+
+	//3. --_
+	if (positionOnBoard.getX() + 2 <= 7 && positionOnBoard.getY() + 1 <= 7)
+	{
+		tmp.setX(positionOnBoard.getX() + 2);
+		tmp.setY(positionOnBoard.getY() + 1);
+		Board::setFieldUnderAttack(tmp, pieceTypeToColor(type));
+	}
+
+
+	//4. |_
+	if (positionOnBoard.getX() + 1 <= 7 && positionOnBoard.getY() + 2 <= 7)
+	{
+		tmp.setX(positionOnBoard.getX() + 1);
+		tmp.setY(positionOnBoard.getY() + 2);
+		Board::setFieldUnderAttack(tmp, pieceTypeToColor(type));
+	}
+
+	//5. _|
+	if (positionOnBoard.getX() - 1 >= 0 && positionOnBoard.getY() + 2 <= 7)
+	{
+		tmp.setX(positionOnBoard.getX() - 1);
+		tmp.setY(positionOnBoard.getY() + 2);
+		Board::setFieldUnderAttack(tmp, pieceTypeToColor(type));
+	}
+
+	//6. _--
+	if (positionOnBoard.getX() - 2 >= 0 && positionOnBoard.getY() + 1 <= 7)
+	{
+		tmp.setX(positionOnBoard.getX() - 2);
+		tmp.setY(positionOnBoard.getY() + 1);
+		Board::setFieldUnderAttack(tmp, pieceTypeToColor(type));
+	}
+
+	//7. -__
+	if (positionOnBoard.getX() - 2 >= 0 && positionOnBoard.getY() - 1 >= 0)
+	{
+		tmp.setX(positionOnBoard.getX() - 2);
+		tmp.setY(positionOnBoard.getY() - 1);
+		Board::setFieldUnderAttack(tmp, pieceTypeToColor(type));
+	}
+
+	//8. '|
+	if (positionOnBoard.getX() - 1 >= 0 && positionOnBoard.getY() - 2 >= 0)
+	{
+		tmp.setX(positionOnBoard.getX() - 1);
+		tmp.setY(positionOnBoard.getY() - 2);
+		Board::setFieldUnderAttack(tmp, pieceTypeToColor(type));
+	}
+
+
 }

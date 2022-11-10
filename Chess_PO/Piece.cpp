@@ -57,7 +57,7 @@ void Piece::update(sf::RenderWindow& target, Board& b)
 	for (Piece* p : Piece::getInstances())
 	{
 		//set fields under attack
-		if(p->type == w_pawn || p->type == b_pawn)
+		//if(p->type == w_king || p->type == b_king)
 		p->setFieldsUnderAttack();
 
 		//check for mouse input

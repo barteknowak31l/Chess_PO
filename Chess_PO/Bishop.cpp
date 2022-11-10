@@ -146,6 +146,70 @@ bool Bishop::isMoveLegal(Coordinates c)
 
 void Bishop::setFieldsUnderAttack()
 {
-	;
+	//sprawdzaj w 4 kierunkach az do wyjscia z planszy albo napotkania przeszkody
+	Coordinates tmp = positionOnBoard;
+	int i = 1;
+
+	//up right
+	while (positionOnBoard.getX() + i <= 7 && positionOnBoard.getY() - i >= 0)
+	{
+		tmp.setX(positionOnBoard.getX() + i);
+		tmp.setY(positionOnBoard.getY() - i);
+
+		Board::setFieldUnderAttack(tmp, pieceTypeToColor(type));
+
+		i++;
+
+		if (Board::getPieceTypeOnGivenCoords(tmp) != empty)
+			break;
+	}
+
+	//up left
+	i = 1;
+	while (positionOnBoard.getX() - i >= 0 && positionOnBoard.getY() - i >= 0)
+	{
+		tmp.setX(positionOnBoard.getX() - i);
+		tmp.setY(positionOnBoard.getY() - i);
+
+		Board::setFieldUnderAttack(tmp, pieceTypeToColor(type));
+
+		i++;
+
+		if (Board::getPieceTypeOnGivenCoords(tmp) != empty)
+			break;
+	}
+
+	//down right
+	i = 1;
+	while (positionOnBoard.getX() + i <= 7 && positionOnBoard.getY() + i <= 7)
+	{
+		tmp.setX(positionOnBoard.getX() + i);
+		tmp.setY(positionOnBoard.getY() + i);
+
+		Board::setFieldUnderAttack(tmp, pieceTypeToColor(type));
+
+		i++;
+
+		if (Board::getPieceTypeOnGivenCoords(tmp) != empty)
+			break;
+	}
+
+	//down left
+	i = 1;
+	while (positionOnBoard.getX() - i >= 0 && positionOnBoard.getY() + i <= 7)
+	{
+		tmp.setX(positionOnBoard.getX() - i);
+		tmp.setY(positionOnBoard.getY() + i);
+
+		Board::setFieldUnderAttack(tmp, pieceTypeToColor(type));
+
+		i++;
+
+		if (Board::getPieceTypeOnGivenCoords(tmp) != empty)
+			break;
+	}
+
+
+
 }
 

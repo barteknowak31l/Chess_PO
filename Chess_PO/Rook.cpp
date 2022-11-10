@@ -165,5 +165,67 @@ void Rook::setFieldsUnderAttack()
 {
 	//sprawdz kazdy kierunek az do wyjscia poza plansza lub napotkania przeszkody i ustaw wszystkie mijane pola na under_attack, wlacznie z polem przeszkody
 
+	Coordinates tmp = positionOnBoard;
+
+	//up
+	int i = 1;
+	while (positionOnBoard.getY() - i >= 0)
+	{
+		tmp.setX(positionOnBoard.getX());
+		tmp.setY(positionOnBoard.getY() - i);
+
+		Board::setFieldUnderAttack(tmp,pieceTypeToColor(type));
+
+		i++;
+
+		if (Board::getPieceTypeOnGivenCoords(tmp) != empty)
+			break;
+	}
+
+	//down
+	i = 1;
+	while (positionOnBoard.getY() + i <= 7)
+	{
+		tmp.setX(positionOnBoard.getX());
+		tmp.setY(positionOnBoard.getY() + i);
+
+		Board::setFieldUnderAttack(tmp,pieceTypeToColor(type));
+
+		i++;
+
+		if (Board::getPieceTypeOnGivenCoords(tmp) != empty)
+			break;
+	}
+
+	//right
+	i = 1;
+	while (positionOnBoard.getX() + i <= 7)
+	{
+		tmp.setX(positionOnBoard.getX() + i);
+		tmp.setY(positionOnBoard.getY());
+
+		Board::setFieldUnderAttack(tmp, pieceTypeToColor(type));
+
+		i++;
+
+		if (Board::getPieceTypeOnGivenCoords(tmp) != empty)
+			break;
+	}
+
+	//left
+	i = 1;
+	while (positionOnBoard.getX() - i >= 0)
+	{
+		tmp.setX(positionOnBoard.getX() - i);
+		tmp.setY(positionOnBoard.getY());
+
+		Board::setFieldUnderAttack(tmp, pieceTypeToColor(type));
+
+		i++;
+
+		if (Board::getPieceTypeOnGivenCoords(tmp) != empty)
+			break;
+	}
+
 
 }

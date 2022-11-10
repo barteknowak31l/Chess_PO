@@ -44,7 +44,12 @@ int main()
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S))
         {
-            Board::printUnderAttack();
+            Board::printUnderAttackWhite();
+        }
+
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D))
+        {
+            Board::printUnderAttackBlack();
         }
 
 
