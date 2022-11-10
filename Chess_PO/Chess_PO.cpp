@@ -42,6 +42,11 @@ int main()
             Board::printBoard();
         }
 
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S))
+        {
+            Board::printUnderAttack();
+        }
+
 
     }
 

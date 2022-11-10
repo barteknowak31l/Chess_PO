@@ -14,9 +14,13 @@
 sf::RectangleShape Board::fields[8][8];
 int Board::_b[8][8];
 sf::Vector2f Board::piecesPositions[8][8];
+int Board::turn;
+int Board::_fieldsUnderAttack[8][8];
+
 
 Board::Board()
 {
+	turn = 0;
 	color1 = sf::Color::White;
 	color2 = sf::Color::Black;
 }
@@ -60,6 +64,14 @@ void Board::init()
 	_b[6][6] = w_pawn;
 	_b[6][7] = w_pawn;
 
+
+	for (int i = 0; i < 8; i++)
+	{
+		for (int j = 0; j < 8; j++)
+		{
+			_fieldsUnderAttack[i][j] = 0;
+		}
+	}
 
 
 	//init piece objects
@@ -118,6 +130,7 @@ void Board::initPieces()
 
 void Board::update(sf::RenderWindow& window)
 {
+	resetFieldsUnderAttack();
 	drawBoard(window);
 	calculatePiecesPositions();
 }
@@ -233,6 +246,21 @@ void Board::move(Piece* p, Coordinates c)
 
 	//set new position of piece in logical representation of board
 	_b[c.getY()][c.getX()] = p->getType();
+
+	//nextTurn
+	nextTurn();
+}
+
+void Board::nextTurn()
+{
+	if (turn == 0)
+	{
+		turn = 1;
+	}
+	else
+	{
+		turn = 0;
+	}
 }
 
 void Board::capture(Coordinates c)
@@ -252,7 +280,22 @@ void Board::capture(Coordinates c)
 
 }
 
+//setters
+void Board::setFieldUnderAttack(Coordinates c)
+{
+	_fieldsUnderAttack[c.getY()][c.getX()]++;
+}
 
+void Board::resetFieldsUnderAttack()
+{
+	for (int i = 0; i < 8; i++)
+	{
+		for (int j = 0; j < 8; j++)
+		{
+			_fieldsUnderAttack[i][j] = 0;
+		}
+	}
+}
 
 //getters
 sf::Vector2f Board::getPiecesPositions(int x, int y)
@@ -263,6 +306,11 @@ sf::Vector2f Board::getPiecesPositions(int x, int y)
 int Board::getPieceTypeOnGivenCoords(Coordinates c)
 {
 	return _b[c.getY()][c.getX()];
+}
+
+int Board::getTurn()
+{
+	return turn;
 }
 
 
@@ -279,6 +327,22 @@ void Board::printBoard()
 		for (int j = 0; j < 8; j++)
 		{
 			std::cout << _b[i][j] << " ";
+		}
+		std::cout << std::endl;
+	}
+}
+
+void Board::printUnderAttack()
+{
+	std::cout << "----------------------\n";
+	std::cout << "y\\x0 1 2 3 4 5 6 7\n";
+	std::cout << "----------------------\n";
+	for (int i = 0; i < 8; i++)
+	{
+		std::cout << i << "| ";
+		for (int j = 0; j < 8; j++)
+		{
+			std::cout << _fieldsUnderAttack[i][j] << " ";
 		}
 		std::cout << std::endl;
 	}

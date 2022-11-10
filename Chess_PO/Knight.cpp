@@ -126,3 +126,8 @@ bool Knight::isMoveLegal(Coordinates c)
 
 	return false;
 }
+
+void Knight::setFieldsUnderAttack()
+{
+	;
+}

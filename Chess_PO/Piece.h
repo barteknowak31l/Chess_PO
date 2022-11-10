@@ -37,8 +37,9 @@ public:
 	//is piece clicked with mouse?
 	bool isActive;
 
-
+	//virtual methods
 	virtual bool isMoveLegal(Coordinates) = 0;
+	virtual void setFieldsUnderAttack() = 0;
 
 	static const std::set<Piece*>& getInstances();
 	static void drawPieces(sf::RenderWindow&,Board&);

@@ -134,3 +134,8 @@ bool King::isMoveLegal(Coordinates c)
 	//not legal move
 	return false;
 }
+
+void King::setFieldsUnderAttack()
+{
+	;
+}

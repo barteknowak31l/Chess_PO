@@ -10,6 +10,7 @@ public:
 	Rook(int, int, int,int);
 	~Rook();
 	bool isMoveLegal(Coordinates);
+	void setFieldsUnderAttack();
 
 };
 

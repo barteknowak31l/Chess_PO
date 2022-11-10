@@ -270,3 +270,8 @@ bool Queen::horizontalMove(Coordinates c)
 
 	return false;
 }
+
+void Queen::setFieldsUnderAttack()
+{
+	;
+}

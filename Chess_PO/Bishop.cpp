@@ -144,3 +144,8 @@ bool Bishop::isMoveLegal(Coordinates c)
 	return false;
 }
 
+void Bishop::setFieldsUnderAttack()
+{
+	;
+}
+

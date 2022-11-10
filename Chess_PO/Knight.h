@@ -11,6 +11,7 @@ public:
 	Knight(int, int, int,int);
 	~Knight();
 	bool isMoveLegal(Coordinates);
+	void setFieldsUnderAttack();
 
 };
 #endif

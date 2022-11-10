@@ -29,6 +29,9 @@ private:
 	//logic representation of pieces on board
 	static int _b[8][8];			
 
+	//logic representations of fields under attack
+	static int _fieldsUnderAttack[8][8];
+
 	//fields
 	static sf::RectangleShape fields[8][8];
 	
@@ -66,9 +69,14 @@ private:
 	sf::Color color1;
 	sf::Color color2;
 
+
+	//turn indicator
+	static int turn;
+
 	//private methods
 	void initPieces();
 	void calculatePiecesPositions();
+	static void nextTurn();
 
 public:
 
@@ -96,6 +104,10 @@ public:
 	static int* screenToBoardPos(sf::Vector2f);
 
 
+	//setters
+	static void setFieldUnderAttack(Coordinates);
+	static void resetFieldsUnderAttack();
+
 	//set colors of board
 	void setColorsofBoard(sf::Color, sf::Color);
 
@@ -104,9 +116,11 @@ public:
 
 	static int getPieceTypeOnGivenCoords(Coordinates);
 
+	static int getTurn();
 
 	//debug
 	static void printBoard();
+	static void printUnderAttack();
 };
 
 #endif

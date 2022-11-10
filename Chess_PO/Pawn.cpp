@@ -167,3 +167,54 @@ bool Pawn::isMoveLegal(Coordinates c)
 	std::cout << "INCORRECT PAWN MOVE :(\n";
 	return false;
 }
+
+void Pawn::setFieldsUnderAttack()
+{
+	Coordinates tmp = positionOnBoard;
+
+	//white
+	if (type == w_pawn)
+	{
+		//left attack
+		if (positionOnBoard.getX() - 1 >= 0 && positionOnBoard.getY() - 1 >= 0)
+		{
+			tmp.setX(positionOnBoard.getX() - 1);
+			tmp.setY(positionOnBoard.getY() - 1);
+			Board::setFieldUnderAttack(tmp);
+		}
+
+		//right attack
+		if (positionOnBoard.getX() + 1 <= 7 && positionOnBoard.getY() - 1 >= 0)
+		{
+			tmp.setX(positionOnBoard.getX() + 1);
+			tmp.setY(positionOnBoard.getY() - 1);
+			Board::setFieldUnderAttack(tmp);
+		}
+
+	}
+
+
+	//black
+	if (type == b_pawn)
+	{
+		//left attack
+		if (positionOnBoard.getX() - 1 >= 0 && positionOnBoard.getY() + 1 <= 7)
+		{
+			tmp.setX(positionOnBoard.getX() - 1);
+			tmp.setY(positionOnBoard.getY() + 1);
+			Board::setFieldUnderAttack(tmp);
+		}
+
+		//right attack
+		if (positionOnBoard.getX() + 1 >= 0 && positionOnBoard.getY() + 1 <= 7)
+		{
+			tmp.setX(positionOnBoard.getX() + 1);
+			tmp.setY(positionOnBoard.getY() + 1);
+			Board::setFieldUnderAttack(tmp);
+		}
+
+	}
+
+
+
+}

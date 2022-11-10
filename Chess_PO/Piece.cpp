@@ -56,10 +56,19 @@ void Piece::update(sf::RenderWindow& target, Board& b)
 {
 	for (Piece* p : Piece::getInstances())
 	{
+		//set fields under attack
+		if(p->type == w_pawn || p->type == b_pawn)
+		p->setFieldsUnderAttack();
+
+		//check for mouse input
 		if (p->isActive || Piece::isSomethingActive == 0)
 		{
-			p->onClickAndHold(target);
-			p->onMouseRelease(target);
+			//it's this color's turn
+			if (Board::getTurn() == p->pieceTypeToColor(p->type))
+			{
+				p->onClickAndHold(target);
+				p->onMouseRelease(target);
+			}
 		}
 	}
 	Piece::drawPieces(target, b);
