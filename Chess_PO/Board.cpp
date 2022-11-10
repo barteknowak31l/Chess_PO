@@ -17,6 +17,10 @@ sf::Vector2f Board::piecesPositions[8][8];
 int Board::turn;
 int Board::_fieldsUnderAttackByWhite[8][8];
 int Board::_fieldsUnderAttackByBlack[8][8];
+int Board::check_white;
+int Board::check_black;
+int Board::hard_check_white;
+int Board::hard_check_black;
 
 
 Board::Board()
@@ -258,6 +262,7 @@ void Board::nextTurn()
 {
 	resetFieldsUnderAttack();
 	Piece::setFieldsUnderAttack();
+	isCheck();
 
 	if (turn == 0)
 	{
@@ -268,6 +273,67 @@ void Board::nextTurn()
 		turn = 0;
 	}
 }
+
+void Board::isCheck()
+{
+	//znajdz krole, sprawdz czy te pola sa atakowane
+	Coordinates pos_w_king;
+	Coordinates pos_b_king;
+
+	for (int i = 0; i < 8; i++)
+	{
+		for (int j = 0; j < 8; j++)
+		{
+			if (_b[i][j] == w_king)
+			{
+				pos_w_king.setX(j);
+				pos_w_king.setY(i);
+			}
+			if (_b[i][j] == b_king)
+			{
+				pos_b_king.setX(j);
+				pos_b_king.setY(i);
+			}
+		}
+	}
+
+	if (getFieldUnderAttack(pos_w_king, 1) > 0)
+	{
+		check_white = 1;
+		if (getFieldUnderAttack(pos_b_king, 0) > 1) {
+			hard_check_white = 1;
+		}
+		else
+		{
+			hard_check_white = 0;
+		}
+	}
+	else
+	{
+		check_white = 0;
+		hard_check_white = 0;
+	}
+
+	if (getFieldUnderAttack(pos_b_king, 0) > 0)
+	{
+		check_black = 1;
+		if (getFieldUnderAttack(pos_b_king, 0) > 1) {
+			hard_check_black = 1;
+		}
+		else
+		{
+			hard_check_black = 0;
+		}
+	}
+	else
+	{
+		check_black = 0;
+		hard_check_black = 0;
+	}
+
+
+}
+
 
 void Board::capture(Coordinates c)
 {
@@ -392,4 +458,13 @@ void Board::printUnderAttackBlack()
 		}
 		std::cout << std::endl;
 	}
+}
+
+void Board::printCheckStatus()
+{
+	std::cout << "-----------------------\n";
+	std::cout << "check white: " << check_white << std::endl;
+	std::cout << "check black: " << check_black << std::endl;
+	std::cout << "hard check white: " << hard_check_white << std::endl;
+	std::cout << "hard check black: " << hard_check_black << std::endl;
 }

@@ -52,6 +52,11 @@ int main()
             Board::printUnderAttackBlack();
         }
 
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Z))
+        {
+            Board::printCheckStatus();
+        }
+
 
     }
 

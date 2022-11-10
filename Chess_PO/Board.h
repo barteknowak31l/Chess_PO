@@ -74,10 +74,19 @@ private:
 	//turn indicator
 	static int turn;
 
+	//check indicators
+	static int check_white;
+	static int check_black;
+	static int hard_check_white;
+	static int hard_check_black;
+
 	//private methods
 	void initPieces();
 	void calculatePiecesPositions();
 	static void nextTurn();
+
+	static void isCheck();
+
 
 public:
 
@@ -122,6 +131,7 @@ public:
 	static void printBoard();
 	static void printUnderAttackWhite();
 	static void printUnderAttackBlack();
+	static void printCheckStatus();
 };
 
 #endif
