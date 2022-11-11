@@ -16,6 +16,7 @@ Piece::Piece()
 
 	isActive = false;
 	capturedInSimulation = false;
+	firstMove = true;
 
 }
 
@@ -253,6 +254,7 @@ void Piece::clearSetofCoords()
 }
 
 
+
 //setters
 void Piece::setPositionOnboard(Coordinates c)
 {
@@ -269,3 +271,9 @@ void Piece::unsetCapturedInSim()
 	capturedInSimulation = false;
 }
 
+
+//getters
+bool Piece::getFirstMove()
+{
+	return firstMove;
+}

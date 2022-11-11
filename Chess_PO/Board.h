@@ -114,6 +114,8 @@ public:
 	//moves a piece to given coordinates on board
 	static void move(Piece*,Coordinates);
 
+	static void castle(Piece*, Coordinates, int);
+
 	//deletes a piece on given coordinates
 	static void capture(Coordinates);
 

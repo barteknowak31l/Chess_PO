@@ -5,6 +5,11 @@
 
 class King : Piece
 {
+
+private:
+	int castle(Coordinates);
+	bool firstMove;
+
 public:
 	sf::Texture texture;
 	King();

@@ -295,6 +295,96 @@ void Board::move(Piece* p, Coordinates c)
 	nextTurn();
 }
 
+void Board::castle(Piece* p, Coordinates c,int variant)
+{
+	Piece* rook = Piece::getPieceByCoords(c);
+	Coordinates r;
+	Coordinates k;
+
+	switch (variant)
+	{
+	case 1: //white left rook
+	{
+		_b[7][3] = w_rook;
+		_b[7][2] = w_king;
+		_b[7][0] = empty;
+		_b[7][4] = empty;
+
+		r.setX(3);
+		r.setY(7);
+		k.setX(2);
+		k.setY(7);
+		
+
+		p->setPositionOnboard(k);
+		rook->setPositionOnboard(r);
+		nextTurn();
+
+		break;
+	}
+	case 2: //white right rook
+	{
+		_b[7][4] = w_rook;
+		_b[7][5] = w_king;
+		_b[7][7] = empty;
+
+
+		r.setX(4);
+		r.setY(7);
+		k.setX(5);
+		k.setY(7);
+
+
+		p->setPositionOnboard(k);
+		rook->setPositionOnboard(r);
+		nextTurn();
+
+		break;
+	}
+	case 3: //black left rook
+	{
+		_b[0][3] = w_rook;
+		_b[0][2] = w_king;
+		_b[0][0] = empty;
+		_b[0][4] = empty;
+
+		r.setX(3);
+		r.setY(0);
+		k.setX(2);
+		k.setY(0);
+
+
+		p->setPositionOnboard(k);
+		rook->setPositionOnboard(r);
+		nextTurn();
+
+		break;
+	}
+	case 4: //black right rook
+	{
+		_b[0][4] = w_rook;
+		_b[0][5] = w_king;
+		_b[0][7] = empty;
+
+
+		r.setX(4);
+		r.setY(0);
+		k.setX(5);
+		k.setY(0);
+
+
+		p->setPositionOnboard(k);
+		rook->setPositionOnboard(r);
+		nextTurn();
+
+		break;
+	}
+
+
+
+	}
+}
+
 bool Board::simulateNextMove(Piece* p, Coordinates c2)
 {
 	Coordinates c1 = p->getPositionOnBoard();

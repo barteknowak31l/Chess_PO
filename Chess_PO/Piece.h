@@ -37,6 +37,8 @@ protected:
 	void addCoordsToSet(Coordinates);
 	void clearSetofCoords();
 
+	bool firstMove;
+
 
 public:
 	Piece();
@@ -69,6 +71,7 @@ public:
 	int getType();
 	static Piece* getPieceByCoords(Coordinates);
 	std::set<Coordinates*> getPossibleMoves();
+	bool getFirstMove();
 
 	//setters
 	void setPositionOnboard(Coordinates);

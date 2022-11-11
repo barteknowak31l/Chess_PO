@@ -30,6 +30,8 @@ Rook::Rook(int x, int y, int color,int t)
 	sprite.setOrigin(texture.getSize().x / 2, texture.getSize().y / 2);
 	instances.insert(this);
 
+	firstMove = true;
+
 }
 
 Rook::~Rook()
@@ -151,6 +153,12 @@ bool Rook::isMoveLegal(Coordinates c)
 
 		//check for capture
 		//for now, considering all moves the same 
+
+		if (firstMove)
+		{
+			firstMove = false;
+		}
+
 		return true;
 
 

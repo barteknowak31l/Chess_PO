@@ -25,6 +25,9 @@ King::King(int x, int y, int color,int t)
 	sprite.setOrigin(texture.getSize().x / 2, texture.getSize().y / 2);
 	instances.insert(this);
 	std::cout << "KingConstructor\n";
+
+	firstMove = true;
+
 }
 
 King::~King()
@@ -37,6 +40,17 @@ bool King::isMoveLegal(Coordinates c)
 {
 	//sprawdz czy na nowym polu nie ma naszej figury
 	//8 kombinacji pole musi byc wolne albo zajete przez przeciwnika
+
+	//try castle
+	int cas = castle(c);
+
+	if (cas> 0 && firstMove && Board::check_white== 0 && Board::check_black ==0)
+	{
+		firstMove = false;
+		Board::castle(this, c, cas);
+		return false;
+	}
+
 
 	int color1 = pieceTypeToColor(Board::getPieceTypeOnGivenCoords(c));
 	int color2 = pieceTypeToColor(type);
@@ -52,7 +66,10 @@ bool King::isMoveLegal(Coordinates c)
 		std::cout << "king up move\n";
 		//if (Board::getPieceTypeOnGivenCoords(c) != empty)
 			//Board::capture(c);
-
+		if (firstMove)
+		{
+			firstMove = false;
+		}
 		return true;
 	}
 
@@ -63,6 +80,10 @@ bool King::isMoveLegal(Coordinates c)
 		//if (Board::getPieceTypeOnGivenCoords(c) != empty)
 			//Board::capture(c);
 
+		if (firstMove)
+		{
+			firstMove = false;
+		}
 		return true;
 	}
 
@@ -73,6 +94,10 @@ bool King::isMoveLegal(Coordinates c)
 		//if (Board::getPieceTypeOnGivenCoords(c) != empty)
 			//Board::capture(c);
 
+		if (firstMove)
+		{
+			firstMove = false;
+		}
 		return true;
 	}
 
@@ -82,6 +107,10 @@ bool King::isMoveLegal(Coordinates c)
 		std::cout << "king down-right move\n";
 		//if (Board::getPieceTypeOnGivenCoords(c) != empty)
 			//Board::capture(c);
+		if (firstMove)
+		{
+			firstMove = false;
+		}
 
 		return true;
 	}
@@ -92,6 +121,10 @@ bool King::isMoveLegal(Coordinates c)
 		std::cout << "king down move\n";
 		//if (Board::getPieceTypeOnGivenCoords(c) != empty)
 			//Board::capture(c);
+		if (firstMove)
+		{
+			firstMove = false;
+		}
 
 		return true;
 	}
@@ -102,6 +135,10 @@ bool King::isMoveLegal(Coordinates c)
 		std::cout << "king down-left move\n";
 		//if (Board::getPieceTypeOnGivenCoords(c) != empty)
 			//Board::capture(c);
+		if (firstMove)
+		{
+			firstMove = false;
+		}
 
 		return true;
 	}
@@ -113,6 +150,11 @@ bool King::isMoveLegal(Coordinates c)
 		//if (Board::getPieceTypeOnGivenCoords(c) != empty)
 			//Board::capture(c);
 
+		if (firstMove)
+		{
+			firstMove = false;
+		}
+
 		return true;
 	}
 
@@ -122,6 +164,12 @@ bool King::isMoveLegal(Coordinates c)
 		std::cout << "king up-left move\n";
 		//if (Board::getPieceTypeOnGivenCoords(c) != empty)
 			//Board::capture(c);
+
+		if (firstMove)
+		{
+			firstMove = false;
+		}
+
 
 		return true;
 	}
@@ -380,5 +428,127 @@ void King::findAllPossibleMoves()
 			addCoordsToSet(tmp);
 		}
 	}
+
+}
+
+int King::castle(Coordinates c)
+{
+	//sprawdz czy c to koordynaty wiezy naszego koloru, sprawdz czy wieza nie byla ruszana, sprawdz czy na drodze nic nie stoi, sprawdz czy finalowe pole jest atakowane
+
+	Coordinates tmp1;
+	Coordinates tmp2;
+	Coordinates tmp3;
+
+	if (firstMove)
+	{
+		//white
+		if (pieceTypeToColor(type) == 0)
+		{
+			//left rook
+			if (c.getX() == 0 && c.getY() == 7)
+			{
+				//check if rook on that field was arleady moved
+				if (Piece::getPieceByCoords(c)->getType() == w_rook && Piece::getPieceByCoords(c)->getFirstMove() == true)
+				{
+					tmp1.setX(1);
+					tmp1.setY(7);
+					tmp2.setX(2);
+					tmp2.setY(7);
+					tmp3.setX(3);
+					tmp3.setY(7);
+
+					//check for obstacles
+					if (Board::getPieceTypeOnGivenCoords(tmp1) == empty && Board::getPieceTypeOnGivenCoords(tmp2) == empty && Board::getPieceTypeOnGivenCoords(tmp3) == empty)
+					{
+						//check if desination field is under attack
+						if (Board::getFieldUnderAttack(tmp2, 1) == 0)
+						{
+							return 1;
+						}
+					}
+				}
+			}
+
+			//right rook
+			if (c.getX() == 7 && c.getY() == 7)
+			{
+				//check if rook on that field was arleady moved
+				if (Piece::getPieceByCoords(c)->getType() == w_rook && Piece::getPieceByCoords(c)->getFirstMove() == true)
+				{
+					tmp1.setX(5);
+					tmp1.setY(7);
+					tmp2.setX(6);
+					tmp2.setY(7);
+
+					//check for obstacles
+					if (Board::getPieceTypeOnGivenCoords(tmp1) == empty && Board::getPieceTypeOnGivenCoords(tmp2) == empty)
+					{
+						//check if desination field is under attack
+						if (Board::getFieldUnderAttack(tmp1, 1) == 0)
+						{
+							return 2;
+						}
+					}
+				}
+			}
+		}
+
+
+		//black
+		if (pieceTypeToColor(type) == 1)
+		{
+			//left rook
+			if (c.getX() == 0 && c.getY() == 0)
+			{
+				//check if rook on that field was arleady moved
+				if (Piece::getPieceByCoords(c)->getType() == b_rook && Piece::getPieceByCoords(c)->getFirstMove() == true)
+				{
+					tmp1.setX(1);
+					tmp1.setY(0);
+					tmp2.setX(2);
+					tmp2.setY(0);
+					tmp3.setX(3);
+					tmp3.setY(0);
+
+					//check for obstacles
+					if (Board::getPieceTypeOnGivenCoords(tmp1) == empty && Board::getPieceTypeOnGivenCoords(tmp2) == empty && Board::getPieceTypeOnGivenCoords(tmp3) == empty)
+					{
+						//check if desination field is under attack
+						if (Board::getFieldUnderAttack(tmp2, 0) == 0)
+						{
+							return 3;
+						}
+					}
+				}
+			}
+
+			//right rook
+			if (c.getX() == 7 && c.getY() == 0)
+			{
+				//check if rook on that field was arleady moved
+				if (Piece::getPieceByCoords(c)->getType() == b_rook && Piece::getPieceByCoords(c)->getFirstMove() == true)
+				{
+					tmp1.setX(5);
+					tmp1.setY(0);
+					tmp2.setX(6);
+					tmp2.setY(0);
+
+					//check for obstacles
+					if (Board::getPieceTypeOnGivenCoords(tmp1) == empty && Board::getPieceTypeOnGivenCoords(tmp2) == empty)
+					{
+						//check if desination field is under attack
+						if (Board::getFieldUnderAttack(tmp1, 0) == 0)
+						{
+							return 4;
+						}
+					}
+				}
+			}
+		}
+
+
+	}
+
+	return 0;
 
 }
