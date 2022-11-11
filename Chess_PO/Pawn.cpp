@@ -180,7 +180,7 @@ void Pawn::findFieldsUnderAttack()
 		{
 			tmp.setX(positionOnBoard.getX() - 1);
 			tmp.setY(positionOnBoard.getY() - 1);
-			Board::setFieldUnderAttack(tmp,0);
+			Board::setFieldUnderAttack(tmp,0, type);
 		}
 
 		//right attack
@@ -188,7 +188,7 @@ void Pawn::findFieldsUnderAttack()
 		{
 			tmp.setX(positionOnBoard.getX() + 1);
 			tmp.setY(positionOnBoard.getY() - 1);
-			Board::setFieldUnderAttack(tmp,0);
+			Board::setFieldUnderAttack(tmp,0, type);
 		}
 
 	}
@@ -202,15 +202,15 @@ void Pawn::findFieldsUnderAttack()
 		{
 			tmp.setX(positionOnBoard.getX() - 1);
 			tmp.setY(positionOnBoard.getY() + 1);
-			Board::setFieldUnderAttack(tmp,1);
+			Board::setFieldUnderAttack(tmp,1, type);
 		}
 
 		//right attack
-		if (positionOnBoard.getX() + 1 >= 0 && positionOnBoard.getY() + 1 <= 7)
+		if (positionOnBoard.getX() + 1 <= 7 && positionOnBoard.getY() + 1 <= 7)
 		{
 			tmp.setX(positionOnBoard.getX() + 1);
 			tmp.setY(positionOnBoard.getY() + 1);
-			Board::setFieldUnderAttack(tmp,1);
+			Board::setFieldUnderAttack(tmp,1, type);
 		}
 
 	}

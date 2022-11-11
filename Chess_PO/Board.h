@@ -114,8 +114,10 @@ public:
 	static int* screenToBoardPos(sf::Vector2f);
 
 
+
+
 	//setters
-	static void setFieldUnderAttack(Coordinates,int);
+	static void setFieldUnderAttack(Coordinates,int,int);
 	static void resetFieldsUnderAttack();
 
 	//set colors of board

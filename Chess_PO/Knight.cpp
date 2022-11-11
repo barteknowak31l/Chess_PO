@@ -137,7 +137,7 @@ void Knight::findFieldsUnderAttack()
 	{
 		tmp.setX(positionOnBoard.getX() + 1);
 		tmp.setY(positionOnBoard.getY() - 2);
-		Board::setFieldUnderAttack(tmp, pieceTypeToColor(type));
+		Board::setFieldUnderAttack(tmp, pieceTypeToColor(type), type);
 	}
 
 
@@ -146,7 +146,7 @@ void Knight::findFieldsUnderAttack()
 	{
 		tmp.setX(positionOnBoard.getX() + 2);
 		tmp.setY(positionOnBoard.getY() - 1);
-		Board::setFieldUnderAttack(tmp, pieceTypeToColor(type));
+		Board::setFieldUnderAttack(tmp, pieceTypeToColor(type), type);
 	}
 
 
@@ -155,7 +155,7 @@ void Knight::findFieldsUnderAttack()
 	{
 		tmp.setX(positionOnBoard.getX() + 2);
 		tmp.setY(positionOnBoard.getY() + 1);
-		Board::setFieldUnderAttack(tmp, pieceTypeToColor(type));
+		Board::setFieldUnderAttack(tmp, pieceTypeToColor(type), type);
 	}
 
 
@@ -164,7 +164,7 @@ void Knight::findFieldsUnderAttack()
 	{
 		tmp.setX(positionOnBoard.getX() + 1);
 		tmp.setY(positionOnBoard.getY() + 2);
-		Board::setFieldUnderAttack(tmp, pieceTypeToColor(type));
+		Board::setFieldUnderAttack(tmp, pieceTypeToColor(type), type);
 	}
 
 	//5. _|
@@ -172,7 +172,7 @@ void Knight::findFieldsUnderAttack()
 	{
 		tmp.setX(positionOnBoard.getX() - 1);
 		tmp.setY(positionOnBoard.getY() + 2);
-		Board::setFieldUnderAttack(tmp, pieceTypeToColor(type));
+		Board::setFieldUnderAttack(tmp, pieceTypeToColor(type), type);
 	}
 
 	//6. _--
@@ -180,7 +180,7 @@ void Knight::findFieldsUnderAttack()
 	{
 		tmp.setX(positionOnBoard.getX() - 2);
 		tmp.setY(positionOnBoard.getY() + 1);
-		Board::setFieldUnderAttack(tmp, pieceTypeToColor(type));
+		Board::setFieldUnderAttack(tmp, pieceTypeToColor(type), type);
 	}
 
 	//7. -__
@@ -188,7 +188,7 @@ void Knight::findFieldsUnderAttack()
 	{
 		tmp.setX(positionOnBoard.getX() - 2);
 		tmp.setY(positionOnBoard.getY() - 1);
-		Board::setFieldUnderAttack(tmp, pieceTypeToColor(type));
+		Board::setFieldUnderAttack(tmp, pieceTypeToColor(type), type);
 	}
 
 	//8. '|
@@ -196,7 +196,7 @@ void Knight::findFieldsUnderAttack()
 	{
 		tmp.setX(positionOnBoard.getX() - 1);
 		tmp.setY(positionOnBoard.getY() - 2);
-		Board::setFieldUnderAttack(tmp, pieceTypeToColor(type));
+		Board::setFieldUnderAttack(tmp, pieceTypeToColor(type), type);
 	}
 
 

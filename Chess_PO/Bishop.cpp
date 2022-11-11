@@ -156,7 +156,7 @@ void Bishop::findFieldsUnderAttack()
 		tmp.setX(positionOnBoard.getX() + i);
 		tmp.setY(positionOnBoard.getY() - i);
 
-		Board::setFieldUnderAttack(tmp, pieceTypeToColor(type));
+		Board::setFieldUnderAttack(tmp, pieceTypeToColor(type),type);
 
 		i++;
 
@@ -171,7 +171,7 @@ void Bishop::findFieldsUnderAttack()
 		tmp.setX(positionOnBoard.getX() - i);
 		tmp.setY(positionOnBoard.getY() - i);
 
-		Board::setFieldUnderAttack(tmp, pieceTypeToColor(type));
+		Board::setFieldUnderAttack(tmp, pieceTypeToColor(type),type);
 
 		i++;
 
@@ -186,7 +186,7 @@ void Bishop::findFieldsUnderAttack()
 		tmp.setX(positionOnBoard.getX() + i);
 		tmp.setY(positionOnBoard.getY() + i);
 
-		Board::setFieldUnderAttack(tmp, pieceTypeToColor(type));
+		Board::setFieldUnderAttack(tmp, pieceTypeToColor(type), type);
 
 		i++;
 
@@ -201,7 +201,7 @@ void Bishop::findFieldsUnderAttack()
 		tmp.setX(positionOnBoard.getX() - i);
 		tmp.setY(positionOnBoard.getY() + i);
 
-		Board::setFieldUnderAttack(tmp, pieceTypeToColor(type));
+		Board::setFieldUnderAttack(tmp, pieceTypeToColor(type), type);
 
 		i++;
 

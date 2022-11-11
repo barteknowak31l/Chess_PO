@@ -145,7 +145,7 @@ void King::findFieldsUnderAttack()
 	{
 		tmp.setX(positionOnBoard.getX());
 		tmp.setY(positionOnBoard.getY() -1);
-		Board::setFieldUnderAttack(tmp, pieceTypeToColor(type));
+		Board::setFieldUnderAttack(tmp, pieceTypeToColor(type), type);
 	}
 
 	//2. up  - right
@@ -153,7 +153,7 @@ void King::findFieldsUnderAttack()
 	{
 		tmp.setX(positionOnBoard.getX() + 1);
 		tmp.setY(positionOnBoard.getY() - 1);
-		Board::setFieldUnderAttack(tmp, pieceTypeToColor(type));
+		Board::setFieldUnderAttack(tmp, pieceTypeToColor(type), type);
 	}
 
 	//3. right
@@ -161,7 +161,7 @@ void King::findFieldsUnderAttack()
 	{
 		tmp.setX(positionOnBoard.getX() + 1);
 		tmp.setY(positionOnBoard.getY());
-		Board::setFieldUnderAttack(tmp, pieceTypeToColor(type));
+		Board::setFieldUnderAttack(tmp, pieceTypeToColor(type), type);
 	}
 
 	//4. down  - right
@@ -169,7 +169,7 @@ void King::findFieldsUnderAttack()
 	{
 		tmp.setX(positionOnBoard.getX() + 1);
 		tmp.setY(positionOnBoard.getY() + 1);
-		Board::setFieldUnderAttack(tmp, pieceTypeToColor(type));
+		Board::setFieldUnderAttack(tmp, pieceTypeToColor(type), type);
 	}
 
 
@@ -178,7 +178,7 @@ void King::findFieldsUnderAttack()
 	{
 		tmp.setX(positionOnBoard.getX());
 		tmp.setY(positionOnBoard.getY() + 1);
-		Board::setFieldUnderAttack(tmp, pieceTypeToColor(type));
+		Board::setFieldUnderAttack(tmp, pieceTypeToColor(type), type);
 	}
 
 	//6. down  - left
@@ -186,7 +186,7 @@ void King::findFieldsUnderAttack()
 	{
 		tmp.setX(positionOnBoard.getX() - 1);
 		tmp.setY(positionOnBoard.getY() + 1);
-		Board::setFieldUnderAttack(tmp, pieceTypeToColor(type));
+		Board::setFieldUnderAttack(tmp, pieceTypeToColor(type), type);
 	}
 
 	//7. left
@@ -194,7 +194,7 @@ void King::findFieldsUnderAttack()
 	{
 		tmp.setX(positionOnBoard.getX() - 1);
 		tmp.setY(positionOnBoard.getY());
-		Board::setFieldUnderAttack(tmp, pieceTypeToColor(type));
+		Board::setFieldUnderAttack(tmp, pieceTypeToColor(type), type);
 	}
 
 	//8. up  - left
@@ -202,7 +202,7 @@ void King::findFieldsUnderAttack()
 	{
 		tmp.setX(positionOnBoard.getX() - 1);
 		tmp.setY(positionOnBoard.getY() - 1);
-		Board::setFieldUnderAttack(tmp, pieceTypeToColor(type));
+		Board::setFieldUnderAttack(tmp, pieceTypeToColor(type), type);
 	}
 
 

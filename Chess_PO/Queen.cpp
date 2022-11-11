@@ -289,7 +289,7 @@ void Queen::diagonalUnderAttack()
 		tmp.setX(positionOnBoard.getX() + i);
 		tmp.setY(positionOnBoard.getY() - i);
 
-		Board::setFieldUnderAttack(tmp, pieceTypeToColor(type));
+		Board::setFieldUnderAttack(tmp, pieceTypeToColor(type), type);
 
 		i++;
 
@@ -304,7 +304,7 @@ void Queen::diagonalUnderAttack()
 		tmp.setX(positionOnBoard.getX() - i);
 		tmp.setY(positionOnBoard.getY() - i);
 
-		Board::setFieldUnderAttack(tmp, pieceTypeToColor(type));
+		Board::setFieldUnderAttack(tmp, pieceTypeToColor(type), type);
 
 		i++;
 
@@ -319,7 +319,7 @@ void Queen::diagonalUnderAttack()
 		tmp.setX(positionOnBoard.getX() + i);
 		tmp.setY(positionOnBoard.getY() + i);
 
-		Board::setFieldUnderAttack(tmp, pieceTypeToColor(type));
+		Board::setFieldUnderAttack(tmp, pieceTypeToColor(type), type);
 
 		i++;
 
@@ -334,7 +334,7 @@ void Queen::diagonalUnderAttack()
 		tmp.setX(positionOnBoard.getX() - i);
 		tmp.setY(positionOnBoard.getY() + i);
 
-		Board::setFieldUnderAttack(tmp, pieceTypeToColor(type));
+		Board::setFieldUnderAttack(tmp, pieceTypeToColor(type), type);
 
 		i++;
 
@@ -355,7 +355,7 @@ void Queen::horizontalVerticalUnderAttack()
 		tmp.setX(positionOnBoard.getX());
 		tmp.setY(positionOnBoard.getY() - i);
 
-		Board::setFieldUnderAttack(tmp, pieceTypeToColor(type));
+		Board::setFieldUnderAttack(tmp, pieceTypeToColor(type), type);
 
 		i++;
 
@@ -370,7 +370,7 @@ void Queen::horizontalVerticalUnderAttack()
 		tmp.setX(positionOnBoard.getX());
 		tmp.setY(positionOnBoard.getY() + i);
 
-		Board::setFieldUnderAttack(tmp, pieceTypeToColor(type));
+		Board::setFieldUnderAttack(tmp, pieceTypeToColor(type), type);
 
 		i++;
 
@@ -385,7 +385,7 @@ void Queen::horizontalVerticalUnderAttack()
 		tmp.setX(positionOnBoard.getX() + i);
 		tmp.setY(positionOnBoard.getY());
 
-		Board::setFieldUnderAttack(tmp, pieceTypeToColor(type));
+		Board::setFieldUnderAttack(tmp, pieceTypeToColor(type), type);
 
 		i++;
 
@@ -400,7 +400,7 @@ void Queen::horizontalVerticalUnderAttack()
 		tmp.setX(positionOnBoard.getX() - i);
 		tmp.setY(positionOnBoard.getY());
 
-		Board::setFieldUnderAttack(tmp, pieceTypeToColor(type));
+		Board::setFieldUnderAttack(tmp, pieceTypeToColor(type), type);
 
 		i++;
 

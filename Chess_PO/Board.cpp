@@ -353,8 +353,9 @@ void Board::capture(Coordinates c)
 }
 
 //setters
-void Board::setFieldUnderAttack(Coordinates c,int color)
+void Board::setFieldUnderAttack(Coordinates c,int color,int type)
 {
+
 	if (color == 0)
 	{
 		_fieldsUnderAttackByWhite[c.getY()][c.getX()]++;
