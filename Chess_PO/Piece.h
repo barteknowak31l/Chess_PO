@@ -33,6 +33,10 @@ protected:
 	//used in simulation step
 	bool capturedInSimulation;
 
+	std::set<Coordinates*> possibleMoves;
+	void addCoordsToSet(Coordinates);
+	void clearSetofCoords();
+
 
 public:
 	Piece();
@@ -44,6 +48,7 @@ public:
 	//virtual methods
 	virtual bool isMoveLegal(Coordinates) = 0;
 	virtual void findFieldsUnderAttack() = 0;
+	virtual void findAllPossibleMoves() = 0;
 
 	static const std::set<Piece*>& getInstances();
 	static void drawPieces(sf::RenderWindow&,Board&);
@@ -63,6 +68,7 @@ public:
 	Coordinates getPositionOnBoard();
 	int getType();
 	static Piece* getPieceByCoords(Coordinates);
+	std::set<Coordinates*> getPossibleMoves();
 
 	//setters
 	void setPositionOnboard(Coordinates);

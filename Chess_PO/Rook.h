@@ -11,6 +11,7 @@ public:
 	~Rook();
 	bool isMoveLegal(Coordinates);
 	void findFieldsUnderAttack();
+	void findAllPossibleMoves();
 
 };
 

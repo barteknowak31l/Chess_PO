@@ -9,6 +9,7 @@ class Pawn : Piece
 {
 private:
 	bool firstMove;
+	void addRemainingPossibleMoves();
 
 	public:
 	sf::Texture texture;
@@ -18,6 +19,7 @@ private:
 
 	bool isMoveLegal(Coordinates);
 	void findFieldsUnderAttack();
+	void findAllPossibleMoves();
 
 };
 

@@ -12,6 +12,7 @@ public:
 	~Knight();
 	bool isMoveLegal(Coordinates);
 	void findFieldsUnderAttack();
+	void findAllPossibleMoves();
 
 };
 #endif

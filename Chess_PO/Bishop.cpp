@@ -146,6 +146,7 @@ bool Bishop::isMoveLegal(Coordinates c)
 
 void Bishop::findFieldsUnderAttack()
 {
+
 	//sprawdzaj w 4 kierunkach az do wyjscia z planszy albo napotkania przeszkody
 	Coordinates tmp = positionOnBoard;
 	if (capturedInSimulation)
@@ -160,6 +161,7 @@ void Bishop::findFieldsUnderAttack()
 	{
 		tmp.setX(positionOnBoard.getX() + i);
 		tmp.setY(positionOnBoard.getY() - i);
+
 
 		Board::setFieldUnderAttack(tmp, pieceTypeToColor(type),type);
 
@@ -215,6 +217,115 @@ void Bishop::findFieldsUnderAttack()
 	}
 
 
+
+}
+
+void Bishop::findAllPossibleMoves()
+{
+	clearSetofCoords();
+
+	Coordinates tmp = positionOnBoard;
+
+	int i = 1;
+	//up right
+	while (positionOnBoard.getX() + i <= 7 && positionOnBoard.getY() - i >= 0)
+	{
+		tmp.setX(positionOnBoard.getX() + i);
+		tmp.setY(positionOnBoard.getY() - i);
+
+
+		if (Board::getPieceTypeOnGivenCoords(tmp) != empty)
+		{
+			if (pieceTypeToColor(type) != pieceTypeToColor(Board::getPieceTypeOnGivenCoords(tmp)))
+			{
+				addCoordsToSet(tmp);
+			}
+		}
+		else
+		{
+			addCoordsToSet(tmp);
+		}
+
+		i++;
+
+		if (Board::getPieceTypeOnGivenCoords(tmp) != empty)
+			break;
+	}
+
+	//up left
+	i = 1;
+	while (positionOnBoard.getX() - i >= 0 && positionOnBoard.getY() - i >= 0)
+	{
+		tmp.setX(positionOnBoard.getX() - i);
+		tmp.setY(positionOnBoard.getY() - i);
+
+		if (Board::getPieceTypeOnGivenCoords(tmp) != empty)
+		{
+			if (pieceTypeToColor(type) != pieceTypeToColor(Board::getPieceTypeOnGivenCoords(tmp)))
+			{
+				addCoordsToSet(tmp);
+			}
+		}
+		else
+		{
+			addCoordsToSet(tmp);
+		}
+
+		i++;
+
+		if (Board::getPieceTypeOnGivenCoords(tmp) != empty)
+			break;
+	}
+
+	//down right
+	i = 1;
+	while (positionOnBoard.getX() + i <= 7 && positionOnBoard.getY() + i <= 7)
+	{
+		tmp.setX(positionOnBoard.getX() + i);
+		tmp.setY(positionOnBoard.getY() + i);
+
+		if (Board::getPieceTypeOnGivenCoords(tmp) != empty)
+		{
+			if (pieceTypeToColor(type) != pieceTypeToColor(Board::getPieceTypeOnGivenCoords(tmp)))
+			{
+				addCoordsToSet(tmp);
+			}
+		}
+		else
+		{
+			addCoordsToSet(tmp);
+		}
+
+		i++;
+
+		if (Board::getPieceTypeOnGivenCoords(tmp) != empty)
+			break;
+	}
+
+	//down left
+	i = 1;
+	while (positionOnBoard.getX() - i >= 0 && positionOnBoard.getY() + i <= 7)
+	{
+		tmp.setX(positionOnBoard.getX() - i);
+		tmp.setY(positionOnBoard.getY() + i);
+
+		if (Board::getPieceTypeOnGivenCoords(tmp) != empty)
+		{
+			if (pieceTypeToColor(type) != pieceTypeToColor(Board::getPieceTypeOnGivenCoords(tmp)))
+			{
+				addCoordsToSet(tmp);
+			}
+		}
+		else
+		{
+			addCoordsToSet(tmp);
+		}
+
+		i++;
+
+		if (Board::getPieceTypeOnGivenCoords(tmp) != empty)
+			break;
+	}
 
 }
 

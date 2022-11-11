@@ -92,6 +92,10 @@ private:
 	static void nextTurn();
 
 	static void isCheck();
+	static bool isMate(int);
+
+	//utility
+	static int pieceTypeToColor(int);
 
 
 public:

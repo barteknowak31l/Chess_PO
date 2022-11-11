@@ -11,6 +11,9 @@ private:
 	void diagonalUnderAttack();
 	void horizontalVerticalUnderAttack();
 
+	void bishopMoves();
+	void rookMoves();
+
 public:
 	sf::Texture texture;
 	Queen();
@@ -18,6 +21,7 @@ public:
 	~Queen();
 	bool isMoveLegal(Coordinates);
 	void findFieldsUnderAttack();
+	void findAllPossibleMoves();
 
 
 };

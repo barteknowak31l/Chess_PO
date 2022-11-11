@@ -129,6 +129,8 @@ bool Knight::isMoveLegal(Coordinates c)
 
 void Knight::findFieldsUnderAttack()
 {
+
+
 	//8 kombinacji + sprawdzenie czy dana kombinacja miesci sie na szachownicy
 	Coordinates tmp = positionOnBoard;
 	if (capturedInSimulation)
@@ -205,4 +207,166 @@ void Knight::findFieldsUnderAttack()
 	}
 
 
+}
+
+void Knight::findAllPossibleMoves()
+{
+	clearSetofCoords();
+	Coordinates tmp = positionOnBoard;
+
+
+	//1. |'
+	if (positionOnBoard.getX() + 1 <= 7 && positionOnBoard.getY() - 2 >= 0)
+	{
+		tmp.setX(positionOnBoard.getX() + 1);
+		tmp.setY(positionOnBoard.getY() - 2);
+		
+		if (Board::getPieceTypeOnGivenCoords(tmp) != empty)
+		{
+			if (pieceTypeToColor(type) != pieceTypeToColor(Board::getPieceTypeOnGivenCoords(tmp)))
+			{
+				addCoordsToSet(tmp);
+			}
+		}
+		else
+		{
+			addCoordsToSet(tmp);
+		}
+	}
+
+
+	//2. __-
+	if (positionOnBoard.getX() + 2 <= 7 && positionOnBoard.getY() - 1 >= 0)
+	{
+		tmp.setX(positionOnBoard.getX() + 2);
+		tmp.setY(positionOnBoard.getY() - 1);
+
+		if (Board::getPieceTypeOnGivenCoords(tmp) != empty)
+		{
+			if (pieceTypeToColor(type) != pieceTypeToColor(Board::getPieceTypeOnGivenCoords(tmp)))
+			{
+				addCoordsToSet(tmp);
+			}
+		}
+		else
+		{
+			addCoordsToSet(tmp);
+		}
+	}
+
+
+	//3. --_
+	if (positionOnBoard.getX() + 2 <= 7 && positionOnBoard.getY() + 1 <= 7)
+	{
+		tmp.setX(positionOnBoard.getX() + 2);
+		tmp.setY(positionOnBoard.getY() + 1);
+
+		if (Board::getPieceTypeOnGivenCoords(tmp) != empty)
+		{
+			if (pieceTypeToColor(type) != pieceTypeToColor(Board::getPieceTypeOnGivenCoords(tmp)))
+			{
+				addCoordsToSet(tmp);
+			}
+		}
+		else
+		{
+			addCoordsToSet(tmp);
+		}
+	}
+
+
+	//4. |_
+	if (positionOnBoard.getX() + 1 <= 7 && positionOnBoard.getY() + 2 <= 7)
+	{
+		tmp.setX(positionOnBoard.getX() + 1);
+		tmp.setY(positionOnBoard.getY() + 2);
+
+		if (Board::getPieceTypeOnGivenCoords(tmp) != empty)
+		{
+			if (pieceTypeToColor(type) != pieceTypeToColor(Board::getPieceTypeOnGivenCoords(tmp)))
+			{
+				addCoordsToSet(tmp);
+			}
+		}
+		else
+		{
+			addCoordsToSet(tmp);
+		}
+	}
+
+	//5. _|
+	if (positionOnBoard.getX() - 1 >= 0 && positionOnBoard.getY() + 2 <= 7)
+	{
+		tmp.setX(positionOnBoard.getX() - 1);
+		tmp.setY(positionOnBoard.getY() + 2);
+
+		if (Board::getPieceTypeOnGivenCoords(tmp) != empty)
+		{
+			if (pieceTypeToColor(type) != pieceTypeToColor(Board::getPieceTypeOnGivenCoords(tmp)))
+			{
+				addCoordsToSet(tmp);
+			}
+		}
+		else
+		{
+			addCoordsToSet(tmp);
+		}
+	}
+
+	//6. _--
+	if (positionOnBoard.getX() - 2 >= 0 && positionOnBoard.getY() + 1 <= 7)
+	{
+		tmp.setX(positionOnBoard.getX() - 2);
+		tmp.setY(positionOnBoard.getY() + 1);
+
+		if (Board::getPieceTypeOnGivenCoords(tmp) != empty)
+		{
+			if (pieceTypeToColor(type) != pieceTypeToColor(Board::getPieceTypeOnGivenCoords(tmp)))
+			{
+				addCoordsToSet(tmp);
+			}
+		}
+		else
+		{
+			addCoordsToSet(tmp);
+		}
+	}
+
+	//7. -__
+	if (positionOnBoard.getX() - 2 >= 0 && positionOnBoard.getY() - 1 >= 0)
+	{
+		tmp.setX(positionOnBoard.getX() - 2);
+		tmp.setY(positionOnBoard.getY() - 1);
+
+		if (Board::getPieceTypeOnGivenCoords(tmp) != empty)
+		{
+			if (pieceTypeToColor(type) != pieceTypeToColor(Board::getPieceTypeOnGivenCoords(tmp)))
+			{
+				addCoordsToSet(tmp);
+			}
+		}
+		else
+		{
+			addCoordsToSet(tmp);
+		}
+	}
+
+	//8. '|
+	if (positionOnBoard.getX() - 1 >= 0 && positionOnBoard.getY() - 2 >= 0)
+	{
+		tmp.setX(positionOnBoard.getX() - 1);
+		tmp.setY(positionOnBoard.getY() - 2);
+
+		if (Board::getPieceTypeOnGivenCoords(tmp) != empty)
+		{
+			if (pieceTypeToColor(type) != pieceTypeToColor(Board::getPieceTypeOnGivenCoords(tmp)))
+			{
+				addCoordsToSet(tmp);
+			}
+		}
+		else
+		{
+			addCoordsToSet(tmp);
+		}
+	}
 }

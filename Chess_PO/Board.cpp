@@ -265,20 +265,20 @@ void Board::move(Piece* p, Coordinates c)
 {
 	if (p->isMoveLegal(c) == 0)
 	{
-		std::cout << "NIEPOPRAWNY RUCH\n";
+		//std::cout << "NIEPOPRAWNY RUCH\n";
 		return;
 	}
 
 	if (simulateNextMove(p, c) == 0)
 	{
-		std::cout << "KROL POD SZACHEM\n";
+		//std::cout << "KROL POD SZACHEM\n";
 		return;
 	}
 
 
 
 
-	std::cout<<"RUCH ZAAKCEPTOWANY!\n";
+	//std::cout<<"RUCH ZAAKCEPTOWANY!\n";
 
 	capture(c);
 
@@ -300,6 +300,15 @@ bool Board::simulateNextMove(Piece* p, Coordinates c2)
 	Coordinates c1 = p->getPositionOnBoard();
 	Piece* old = Piece::getPieceByCoords(c2);
 
+	//proba zbicia wlasnej figury
+	if (old != nullptr)
+	{
+		if (old->pieceTypeToColor(old->getType()) == p->pieceTypeToColor(p->getType()))
+		{
+			return false;
+		}
+	}
+
 	//kopiuj aktualna tablice board
 	for (int i = 0; i < 8; i++)
 	{
@@ -317,11 +326,11 @@ bool Board::simulateNextMove(Piece* p, Coordinates c2)
 	{
 		if (old == nullptr) {
 			
-			std::cout << "TU NIC NIE MA\n ale jest wylapywane:: " << getPieceTypeOnGivenCoords(c2) << std::endl;
+			//std::cout << "TU NIC NIE MA\n ale jest wylapywane:: " << getPieceTypeOnGivenCoords(c2) << std::endl;
 			return false;
 		}
 
-		std::cout << "TU COS JEST: " << getPieceTypeOnGivenCoords(c2) << std::endl;
+		//std::cout << "TU COS JEST: " << getPieceTypeOnGivenCoords(c2) << std::endl;
 		old->setCapturedInSim();
 
 	}
@@ -332,15 +341,15 @@ bool Board::simulateNextMove(Piece* p, Coordinates c2)
 	_b[c1.getY()][c1.getX()] = empty;
 
 
-	std::cout << "TABLICA PO ATAKU\n----------------\n";
-	printBoard();
+	//std::cout << "TABLICA PO ATAKU\n----------------\n";
+	//printBoard();
 
 	//symuluj atak
 	resetFieldsUnderAttack();
 	Piece::setFieldsUnderAttack();
 
-	std::cout << "ATAK WHITE\n----------------\n";
-	printUnderAttackWhite();
+	//std::cout << "ATAK WHITE\n----------------\n";
+	//printUnderAttackWhite();
 
 
 	//sprawdz czy krol danego koloru jest atakowany:
@@ -433,6 +442,24 @@ void Board::nextTurn()
 	{
 		turn = 0;
 	}
+
+	if (check_black || check_white)
+	{
+		std::cout << "SZACH!\n";
+	}
+
+	if (isMate(turn) && (check_black || check_white))
+	{
+		if (turn == 0 && check_white)
+		{
+			std::cout << "CZARNE DALY MATA\n";
+		}
+		else if(turn == 1 && check_black)
+		{
+			std::cout << "BIALE DALY MATA\n";
+		}
+	}
+
 }
 
 void Board::isCheck()
@@ -495,6 +522,67 @@ void Board::isCheck()
 
 }
 
+bool Board::isMate(int color)
+{
+	//color == 0 sprawdz czy bialy ma mata
+	if (color == 0)
+	{
+		for (Piece* p : Piece::getInstances())
+		{
+			//wszystkie biale figury 
+			if (p->pieceTypeToColor(p->getType()) == 0)
+			{
+				p->findAllPossibleMoves();
+
+				for (Coordinates *c : p->getPossibleMoves())
+				{
+					std::cout << "FIGURA NA: ";
+					p->getPositionOnBoard().print();
+					std::cout << " ATAKUJE ";
+					c->print();
+					std::cout << std::endl;
+
+					if (simulateNextMove(p, *c) && p->isMoveLegal(*c))
+					{
+						std::cout << "Znaleziono ruch bialego: " << p->getPositionOnBoard().getX() << " " << p->getPositionOnBoard().getY() << " -> " << c->getX() << " " << c->getY() << std::endl;
+						return false;
+					}
+				}
+			}
+		}
+	}
+
+	//color == 1 sprawdz czy czarny ma mata
+	if (color == 1)
+	{
+		for (Piece* p : Piece::getInstances())
+		{
+			//wszystkie czarne figury 
+			if (p->pieceTypeToColor(p->getType()) == 1)
+			{
+				p->findAllPossibleMoves();
+
+				for (Coordinates *c : p->getPossibleMoves())
+				{
+					std::cout << "FIGURA NA: ";
+					p->getPositionOnBoard().print();
+					std::cout << " ATAKUJE ";
+					c->print();
+					std::cout << std::endl;
+
+					if (simulateNextMove(p, *c))
+					{
+						std::cout << "Znaleziono ruch czarnego: " << p->getPositionOnBoard().getX() << " " << p->getPositionOnBoard().getY() << " -> " << c->getX() << " " << c->getY() << std::endl;
+						return false;
+					}
+				}
+			}
+		}
+	}
+
+	return true;
+
+}
 
 void Board::capture(Coordinates c)
 {
@@ -559,18 +647,44 @@ int Board::getFieldUnderAttack(Coordinates c, int color)
 {
 	if (color == 0)
 	{
-		std::cout << "checking white " << c.getX() << c.getY() << _fieldsUnderAttackByWhite[c.getY()][c.getX()] << std::endl;;
+		//std::cout << "checking white " << c.getX() << c.getY() << _fieldsUnderAttackByWhite[c.getY()][c.getX()] << std::endl;;
 		return _fieldsUnderAttackByWhite[c.getY()][c.getX()];
 	}
 	else if (color == 1)
 	{
-		std::cout << "checking black " << c.getX() << c.getY() << _fieldsUnderAttackByBlack[c.getY()][c.getX()] << std::endl;
+		//std::cout << "checking black " << c.getX() << c.getY() << _fieldsUnderAttackByBlack[c.getY()][c.getX()] << std::endl;
 		return _fieldsUnderAttackByBlack[c.getY()][c.getX()];
 	}
 
 	return -1;
 }
 
+int Board::pieceTypeToColor(int t)
+{
+	switch (t)
+	{
+	case w_pawn:
+	case w_rook:
+	case w_knight:
+	case w_bishop:
+	case w_queen:
+	case w_king:
+	{
+		return 0;
+	}
+	case b_pawn:
+	case b_rook:
+	case b_knight:
+	case b_bishop:
+	case b_queen:
+	case b_king:
+	{
+		return 1;
+	}
+
+	default: return -1;
+	}
+}
 
 
 //debug

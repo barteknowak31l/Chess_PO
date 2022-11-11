@@ -40,5 +40,5 @@ char Coordinates::xToLetters(int x)
 
 void Coordinates::print()
 {
-	std::cout << _x << " " << _y << std::endl;
+	std::cout << _x << " " << _y;
 }

@@ -170,6 +170,8 @@ bool Pawn::isMoveLegal(Coordinates c)
 
 void Pawn::findFieldsUnderAttack()
 {
+
+
 	Coordinates tmp = positionOnBoard;
 	
 	if (capturedInSimulation)
@@ -222,4 +224,116 @@ void Pawn::findFieldsUnderAttack()
 
 
 
+}
+
+void Pawn::findAllPossibleMoves()
+{
+	clearSetofCoords();
+
+	Coordinates tmp;
+
+	//white
+	if (type == w_pawn)
+	{
+		//left attack
+		if (positionOnBoard.getX() - 1 >= 0 && positionOnBoard.getY() - 1 >= 0)
+		{
+			tmp.setX(positionOnBoard.getX() - 1);
+			tmp.setY(positionOnBoard.getY() - 1);
+			
+			if(Board::getPieceTypeOnGivenCoords(tmp) != empty && pieceTypeToColor(Board::getPieceTypeOnGivenCoords(tmp)) == 1)
+				addCoordsToSet(tmp);
+		}
+
+		//right attack
+		if (positionOnBoard.getX() + 1 <= 7 && positionOnBoard.getY() - 1 >= 0)
+		{
+			tmp.setX(positionOnBoard.getX() + 1);
+			tmp.setY(positionOnBoard.getY() - 1);
+
+			if (Board::getPieceTypeOnGivenCoords(tmp) != empty && pieceTypeToColor(Board::getPieceTypeOnGivenCoords(tmp)) == 1)
+				addCoordsToSet(tmp);
+		}
+
+	}
+
+
+	//black
+	if (type == b_pawn)
+	{
+		//left attack
+		if (positionOnBoard.getX() - 1 >= 0 && positionOnBoard.getY() + 1 <= 7)
+		{
+			tmp.setX(positionOnBoard.getX() - 1);
+			tmp.setY(positionOnBoard.getY() + 1);
+			if (Board::getPieceTypeOnGivenCoords(tmp) != empty && pieceTypeToColor(Board::getPieceTypeOnGivenCoords(tmp)) == 0)
+				addCoordsToSet(tmp);
+		}
+
+		//right attack
+		if (positionOnBoard.getX() + 1 <= 7 && positionOnBoard.getY() + 1 <= 7)
+		{
+			tmp.setX(positionOnBoard.getX() + 1);
+			tmp.setY(positionOnBoard.getY() + 1);
+			if (Board::getPieceTypeOnGivenCoords(tmp) != empty && pieceTypeToColor(Board::getPieceTypeOnGivenCoords(tmp)) == 1)
+				addCoordsToSet(tmp);
+		}
+
+	}
+
+	addRemainingPossibleMoves();
+
+}
+
+void Pawn::addRemainingPossibleMoves()
+{
+	Coordinates tmp = positionOnBoard;
+
+
+	if (type == b_pawn)
+	{
+		if (firstMove)
+		{
+
+			//check +2 move
+			tmp.setY(positionOnBoard.getY() + 2);
+			if (Board::getPieceTypeOnGivenCoords(tmp) == empty)
+			{
+				addCoordsToSet(tmp);
+			}
+
+		}
+
+		//check +1 move
+		tmp.setY(positionOnBoard.getY() + 1);
+		if (Board::getPieceTypeOnGivenCoords(tmp) == empty)
+		{
+			addCoordsToSet(tmp);
+		}
+
+		
+	}
+
+
+	if (type == w_pawn)
+	{
+		if (firstMove)
+		{
+
+			//check +2 move
+			tmp.setY(positionOnBoard.getY() - 2);
+			if (Board::getPieceTypeOnGivenCoords(tmp) == empty)
+			{
+				addCoordsToSet(tmp);
+			}
+
+		}
+
+		//check +1 move
+		tmp.setY(positionOnBoard.getY() - 1);
+		if (Board::getPieceTypeOnGivenCoords(tmp) == empty)
+		{
+			addCoordsToSet(tmp);
+		}
+	}
 }

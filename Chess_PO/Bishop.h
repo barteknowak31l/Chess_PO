@@ -12,6 +12,7 @@ public:
 	~Bishop();
 	bool isMoveLegal(Coordinates);
 	void findFieldsUnderAttack();
+	void findAllPossibleMoves();
 
 };
 #endif

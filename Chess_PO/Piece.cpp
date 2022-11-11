@@ -227,6 +227,31 @@ Piece* Piece::getPieceByCoords(Coordinates c)
 	return nullptr;
 }
 
+std::set<Coordinates*> Piece::getPossibleMoves()
+{
+	return possibleMoves;
+}
+
+void Piece::addCoordsToSet(Coordinates c)
+{
+	Coordinates* n = new Coordinates;
+	n->setX(c.getX());
+	n->setY(c.getY());
+
+	possibleMoves.insert(n);
+
+}
+
+void Piece::clearSetofCoords()
+{
+	for (Coordinates* c : possibleMoves)
+	{
+		delete c;
+	}
+
+	possibleMoves.clear();
+}
+
 
 //setters
 void Piece::setPositionOnboard(Coordinates c)
