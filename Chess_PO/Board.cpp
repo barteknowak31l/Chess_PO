@@ -22,6 +22,11 @@ int Board::check_black;
 int Board::hard_check_white;
 int Board::hard_check_black;
 
+//simulation stuff
+int Board::_sim_b[8][8];
+int Board::_sim_fieldsUnderAttackByWhite[8][8];
+int Board::_sim_fieldsUnderAttackByBlack[8][8];
+
 
 Board::Board()
 {
@@ -243,6 +248,15 @@ void Board::move(Piece* p, Coordinates c)
 		return;
 	}
 
+	if (simulateNextMove(p->getPositionOnBoard(), c, p->pieceTypeToColor(p->getType())) == 0)
+	{
+		std::cout << "KROL POD SZACHEM\n";
+		return;
+	}
+
+
+
+
 	std::cout<<"RUCH ZAAKCEPTOWANY!\n";
 
 	//set old logical position to empty state
@@ -256,6 +270,72 @@ void Board::move(Piece* p, Coordinates c)
 
 	//nextTurn
 	nextTurn();
+}
+
+bool Board::simulateNextMove(Coordinates c1, Coordinates c2, int color)
+{
+	//kopiuj aktualna tablice board
+	for (int i = 0; i < 8; i++)
+	{
+		for (int j = 0; j < 8; j++)
+		{
+			_sim_b[i][j] = _b[i][j];
+		}
+	}
+
+	//wykonaj ruch na starej tablicy
+	_b[c2.getY()][c2.getX()] = getPieceTypeOnGivenCoords(c1);
+	_b[c1.getY()][c1.getX()] = empty;
+
+	//symuluj atak
+	resetFieldsUnderAttack();
+	Piece::setFieldsUnderAttack();
+
+
+	//sprawdz czy krol danego koloru jest atakowany:
+	// - tak - przywroc stara tablice i wywolaj potem setfieldsunderattack
+	// - nie - poprawny ruch do nothing
+
+	//ustawia flagi
+	isCheck();
+
+	//niepoprawny ruch bialego
+	if (color == 0 && check_white)
+	{
+		for (int i = 0; i < 8; i++)
+		{
+			for (int j = 0; j < 8; j++)
+			{
+				_b[i][j] = _sim_b[i][j];
+			}
+		}
+		resetFieldsUnderAttack();
+		Piece::setFieldsUnderAttack();
+		isCheck();
+
+		return false;
+	}
+
+	//niepoprawny ruch czarnego
+	if (color == 1 && check_black)
+	{
+		for (int i = 0; i < 8; i++)
+		{
+			for (int j = 0; j < 8; j++)
+			{
+				_b[i][j] = _sim_b[i][j];
+			}
+		}
+		Piece::setFieldsUnderAttack();
+		isCheck();
+
+		return false;
+
+	}
+
+	//poprawny ruch
+	return true;
+
 }
 
 void Board::nextTurn()

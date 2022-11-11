@@ -33,6 +33,12 @@ private:
 	static int _fieldsUnderAttackByWhite[8][8];
 	static int _fieldsUnderAttackByBlack[8][8];
 
+
+	//nextMove simulation
+	static int _sim_b[8][8];
+	static int _sim_fieldsUnderAttackByWhite[8][8];
+	static int _sim_fieldsUnderAttackByBlack[8][8];
+
 	//fields
 	static sf::RectangleShape fields[8][8];
 	
@@ -114,7 +120,8 @@ public:
 	static int* screenToBoardPos(sf::Vector2f);
 
 
-
+	//nextMove simulation
+	static bool simulateNextMove(Coordinates,Coordinates,int);
 
 	//setters
 	static void setFieldUnderAttack(Coordinates,int,int);

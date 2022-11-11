@@ -14,6 +14,7 @@ class Piece : sf::Drawable
 private:
 	static bool isSomethingActive;
 	bool isCollidingWithCursor(sf::Vector2f);
+
 	
 
 protected:
