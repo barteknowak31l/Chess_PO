@@ -448,6 +448,19 @@ void Board::nextTurn()
 		std::cout << "SZACH!\n";
 	}
 
+
+	if (isStaleMate(turn))
+	{
+		if (turn == 0)
+		{
+			std::cout << "PAT! Bialy nie ma ruchu\n";
+		}
+		else if (turn == 1)
+		{
+			std::cout << "PAT! Czarny nie ma ruchu\n";
+		}
+	}
+
 	if (isMate(turn) && (check_black || check_white))
 	{
 		if (turn == 0 && check_white)
@@ -581,6 +594,33 @@ bool Board::isMate(int color)
 	}
 
 	return true;
+
+}
+
+bool Board::isStaleMate(int color)
+{
+	//sprawdz czy bialy ma jakis ruch, ktory jest legalny i czy nie ma szacha
+	if (color == 0)
+	{
+		//pat
+		if (isMate(color) && !check_white)
+		{
+			return true;
+		}
+	}
+
+	//sprawdz czy czarny ma jakis ruch, ktory jest legalny i czy nie ma szacha
+	if (color == 1)
+	{
+		//pat
+		if (isMate(color) && !check_black)
+		{
+			return true;
+		}
+	}
+	
+	//nie ma pata
+	return false;
 
 }
 

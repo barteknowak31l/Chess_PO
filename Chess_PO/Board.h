@@ -93,6 +93,7 @@ private:
 
 	static void isCheck();
 	static bool isMate(int);
+	static bool isStaleMate(int);
 
 	//utility
 	static int pieceTypeToColor(int);
