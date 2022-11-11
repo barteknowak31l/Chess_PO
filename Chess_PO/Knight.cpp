@@ -51,8 +51,8 @@ bool Knight::isMoveLegal(Coordinates c)
 	//1. |'
 	if (positionOnBoard.getY() - c.getY() == 2 && c.getX() - positionOnBoard.getX() == 1)
 	{
-		if (Board::getPieceTypeOnGivenCoords(c) != empty)
-			Board::capture(c);
+		//if (Board::getPieceTypeOnGivenCoords(c) != empty)
+			//Board::capture(c);
 
 		return true;
 	}
@@ -60,8 +60,8 @@ bool Knight::isMoveLegal(Coordinates c)
 	//2. __-
 	if (positionOnBoard.getY() - c.getY() == 1 && c.getX() - positionOnBoard.getX() == 2)
 	{
-		if (Board::getPieceTypeOnGivenCoords(c) != empty)
-			Board::capture(c);
+		//if (Board::getPieceTypeOnGivenCoords(c) != empty)
+			//Board::capture(c);
 
 		return true;
 	}
@@ -69,8 +69,8 @@ bool Knight::isMoveLegal(Coordinates c)
 	//3. --_
 	if (c.getY() - positionOnBoard.getY() == 1 && c.getX() - positionOnBoard.getX() == 2)
 	{
-		if (Board::getPieceTypeOnGivenCoords(c) != empty)
-			Board::capture(c);
+		//if (Board::getPieceTypeOnGivenCoords(c) != empty)
+			//Board::capture(c);
 
 		return true;
 	}
@@ -78,8 +78,8 @@ bool Knight::isMoveLegal(Coordinates c)
 	//4. |_
 	if (c.getY() - positionOnBoard.getY() == 2 && c.getX() - positionOnBoard.getX() == 1)
 	{
-		if (Board::getPieceTypeOnGivenCoords(c) != empty)
-			Board::capture(c);
+		//if (Board::getPieceTypeOnGivenCoords(c) != empty)
+			//Board::capture(c);
 
 		return true;
 	}
@@ -87,8 +87,8 @@ bool Knight::isMoveLegal(Coordinates c)
 	//5. _|
 	if (c.getY() - positionOnBoard.getY() == 2 && positionOnBoard.getX() - c.getX() == 1)
 	{
-		if (Board::getPieceTypeOnGivenCoords(c) != empty)
-			Board::capture(c);
+		//if (Board::getPieceTypeOnGivenCoords(c) != empty)
+			//Board::capture(c);
 
 		return true;
 	}
@@ -96,8 +96,8 @@ bool Knight::isMoveLegal(Coordinates c)
 	//6. _--
 	if (c.getY() - positionOnBoard.getY() == 1 && positionOnBoard.getX() - c.getX() == 2)
 	{
-		if (Board::getPieceTypeOnGivenCoords(c) != empty)
-			Board::capture(c);
+		//if (Board::getPieceTypeOnGivenCoords(c) != empty)
+			//Board::capture(c);
 
 		return true;
 	}
@@ -105,8 +105,8 @@ bool Knight::isMoveLegal(Coordinates c)
 	//7. -__
 	if (positionOnBoard.getY() - c.getY() == 1 && positionOnBoard.getX() - c.getX() == 2)
 	{
-		if (Board::getPieceTypeOnGivenCoords(c) != empty)
-			Board::capture(c);
+		//if (Board::getPieceTypeOnGivenCoords(c) != empty)
+			//Board::capture(c);
 
 		return true;
 	}
@@ -114,8 +114,8 @@ bool Knight::isMoveLegal(Coordinates c)
 	//8. '|
 	if (positionOnBoard.getY() - c.getY() == 2 && positionOnBoard.getX() - c.getX() == 1)
 	{
-		if (Board::getPieceTypeOnGivenCoords(c) != empty)
-			Board::capture(c);
+		//if (Board::getPieceTypeOnGivenCoords(c) != empty)
+			//Board::capture(c);
 
 		return true;
 	}
@@ -131,6 +131,11 @@ void Knight::findFieldsUnderAttack()
 {
 	//8 kombinacji + sprawdzenie czy dana kombinacja miesci sie na szachownicy
 	Coordinates tmp = positionOnBoard;
+	if (capturedInSimulation)
+	{
+		return;
+	}
+
 	
 	//1. |'
 	if (positionOnBoard.getX() + 1 <= 7 && positionOnBoard.getY() - 2 >= 0)

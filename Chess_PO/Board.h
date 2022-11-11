@@ -98,6 +98,7 @@ public:
 
 
 	Board();
+	~Board();
 
 	void init();
 
@@ -121,7 +122,7 @@ public:
 
 
 	//nextMove simulation
-	static bool simulateNextMove(Coordinates,Coordinates,int);
+	static bool simulateNextMove(Piece*,Coordinates);
 
 	//setters
 	static void setFieldUnderAttack(Coordinates,int,int);

@@ -136,7 +136,7 @@ bool Rook::isMoveLegal(Coordinates c)
 			if (color1 != color2)
 			{
 				std::cout << "Rook captured a piece!\n";
-				Board::capture(c);
+				//Board::capture(c);
 				
 			}
 			else
@@ -166,6 +166,10 @@ void Rook::findFieldsUnderAttack()
 	//sprawdz kazdy kierunek az do wyjscia poza plansza lub napotkania przeszkody i ustaw wszystkie mijane pola na under_attack, wlacznie z polem przeszkody
 
 	Coordinates tmp = positionOnBoard;
+	if (capturedInSimulation)
+	{
+		return;
+	}
 
 	//up
 	int i = 1;

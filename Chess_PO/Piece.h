@@ -30,6 +30,9 @@ protected:
 	static std::set<Piece*> instances;
 	void draw(sf::RenderTarget&, sf::RenderStates) const override;
 
+	//used in simulation step
+	bool capturedInSimulation;
+
 
 public:
 	Piece();
@@ -59,10 +62,13 @@ public:
 	//getters
 	Coordinates getPositionOnBoard();
 	int getType();
+	static Piece* getPieceByCoords(Coordinates);
 
 	//setters
 	void setPositionOnboard(Coordinates);
 
+	void setCapturedInSim();
+	void unsetCapturedInSim();
 };
 
 #endif

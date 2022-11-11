@@ -15,6 +15,7 @@ Piece::Piece()
 	}
 
 	isActive = false;
+	capturedInSimulation = false;
 
 }
 
@@ -213,10 +214,33 @@ int Piece::getType()
 	return type;
 }
 
+Piece* Piece::getPieceByCoords(Coordinates c)
+{
+	for (Piece* p : getInstances())
+	{
+		if (p->positionOnBoard == c)
+		{
+			return p;
+		}
+	}
+
+	return nullptr;
+}
+
 
 //setters
 void Piece::setPositionOnboard(Coordinates c)
 {
 	positionOnBoard = c;
+}
+
+void Piece::setCapturedInSim()
+{
+	capturedInSimulation = true;
+}
+
+void Piece::unsetCapturedInSim()
+{
+	capturedInSimulation = false;
 }
 

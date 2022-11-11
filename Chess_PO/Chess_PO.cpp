@@ -4,15 +4,16 @@
 #include "Pawn.h"
 
 
+void initGame();
+void resetGame();
+
+Board* board;
+
 int main()
 {
     sf::RenderWindow window(sf::VideoMode(800, 600), "Chess!");
 
-
-    Board board;
-    board.setColorsofBoard(sf::Color::White,sf::Color(134,79,0,255));
-    board.init();
-
+    initGame();
 
     while (window.isOpen())
     {
@@ -31,8 +32,8 @@ int main()
 
         //update
         window.clear();
-        board.update(window);
-        Piece::update(window,board);
+        board->update(window);
+        Piece::update(window,*board);
         window.display();
 
 
@@ -58,7 +59,27 @@ int main()
         }
 
 
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::R))
+        {
+            resetGame();
+        }
+
+
     }
 
     return 0;
+}
+
+
+void initGame()
+{
+    board = new Board;
+    board->setColorsofBoard(sf::Color::White, sf::Color(134, 79, 0, 255));
+    board->init();
+}
+
+void resetGame()
+{
+    delete board;
+    initGame();
 }

@@ -1,5 +1,5 @@
 #include "coordinates.h"
-
+#include <iostream>
 
 Coordinates::Coordinates()
 {
@@ -36,4 +36,9 @@ void Coordinates::setY(int y)
 char Coordinates::xToLetters(int x)
 {
 	return x + 17;	//offset w ASCII
+}
+
+void Coordinates::print()
+{
+	std::cout << _x << " " << _y << std::endl;
 }

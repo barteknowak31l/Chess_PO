@@ -72,7 +72,7 @@ bool Pawn::isMoveLegal(Coordinates c)
 					if (color1 != color2)
 					{
 						firstMove = false;
-						Board::capture(c);
+						//Board::capture(c);
 						return true;
 					}
 				}
@@ -95,7 +95,7 @@ bool Pawn::isMoveLegal(Coordinates c)
 					int color2 = pieceTypeToColor(Board::getPieceTypeOnGivenCoords(c));
 					if (color1 != color2)
 					{
-						Board::capture(c);
+						//Board::capture(c);
 						return true;
 					}
 				}
@@ -131,7 +131,7 @@ bool Pawn::isMoveLegal(Coordinates c)
 					if (color1 != color2)
 					{
 						firstMove = false;
-						Board::capture(c);
+						//Board::capture(c);
 						return true;
 					}
 				}
@@ -154,7 +154,7 @@ bool Pawn::isMoveLegal(Coordinates c)
 					int color2 = pieceTypeToColor(Board::getPieceTypeOnGivenCoords(c));
 					if (color1 != color2)
 					{
-						Board::capture(c);
+						//Board::capture(c);
 						return true;
 					}
 				}
@@ -171,6 +171,11 @@ bool Pawn::isMoveLegal(Coordinates c)
 void Pawn::findFieldsUnderAttack()
 {
 	Coordinates tmp = positionOnBoard;
+	
+	if (capturedInSimulation)
+	{
+		return;
+	}
 
 	//white
 	if (type == w_pawn)

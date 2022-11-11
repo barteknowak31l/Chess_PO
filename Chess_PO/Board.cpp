@@ -35,6 +35,24 @@ Board::Board()
 	color2 = sf::Color::Black;
 }
 
+Board::~Board()
+{
+	for (Piece* p : Piece::getInstances())
+	{
+		delete p;
+	}
+
+	for (int i = 0; i < 8; i++)
+	{
+		for (int j = 0; j < 8; j++)
+		{
+			_b[i][j] = 0;
+		}
+	}
+
+
+}
+
 void Board::init()
 {
 	_b[0][0] = b_rook;
@@ -81,6 +99,9 @@ void Board::init()
 		{
 			_fieldsUnderAttackByWhite[i][j] = 0;
 			_fieldsUnderAttackByBlack[i][j] = 0;
+			_sim_fieldsUnderAttackByBlack[i][j] = 0;
+			_sim_fieldsUnderAttackByWhite[i][j] = 0;
+			_sim_b[i][j] = 0;
 		}
 	}
 
@@ -248,7 +269,7 @@ void Board::move(Piece* p, Coordinates c)
 		return;
 	}
 
-	if (simulateNextMove(p->getPositionOnBoard(), c, p->pieceTypeToColor(p->getType())) == 0)
+	if (simulateNextMove(p, c) == 0)
 	{
 		std::cout << "KROL POD SZACHEM\n";
 		return;
@@ -258,6 +279,8 @@ void Board::move(Piece* p, Coordinates c)
 
 
 	std::cout<<"RUCH ZAAKCEPTOWANY!\n";
+
+	capture(c);
 
 	//set old logical position to empty state
 	_b[p->getPositionOnBoard().getY()][p->getPositionOnBoard().getX()] = empty;
@@ -272,8 +295,11 @@ void Board::move(Piece* p, Coordinates c)
 	nextTurn();
 }
 
-bool Board::simulateNextMove(Coordinates c1, Coordinates c2, int color)
+bool Board::simulateNextMove(Piece* p, Coordinates c2)
 {
+	Coordinates c1 = p->getPositionOnBoard();
+	Piece* old = Piece::getPieceByCoords(c2);
+
 	//kopiuj aktualna tablice board
 	for (int i = 0; i < 8; i++)
 	{
@@ -283,13 +309,38 @@ bool Board::simulateNextMove(Coordinates c1, Coordinates c2, int color)
 		}
 	}
 
+	//zmien koordynaty w obiekcie piece p
+	p->setPositionOnboard(c2);
+
+	//zasymuluj bicie
+	if (getPieceTypeOnGivenCoords(c2) != empty)
+	{
+		if (old == nullptr) {
+			
+			std::cout << "TU NIC NIE MA\n ale jest wylapywane:: " << getPieceTypeOnGivenCoords(c2) << std::endl;
+			return false;
+		}
+
+		std::cout << "TU COS JEST: " << getPieceTypeOnGivenCoords(c2) << std::endl;
+		old->setCapturedInSim();
+
+	}
+
+
 	//wykonaj ruch na starej tablicy
 	_b[c2.getY()][c2.getX()] = getPieceTypeOnGivenCoords(c1);
 	_b[c1.getY()][c1.getX()] = empty;
 
+
+	std::cout << "TABLICA PO ATAKU\n----------------\n";
+	printBoard();
+
 	//symuluj atak
 	resetFieldsUnderAttack();
 	Piece::setFieldsUnderAttack();
+
+	std::cout << "ATAK WHITE\n----------------\n";
+	printUnderAttackWhite();
 
 
 	//sprawdz czy krol danego koloru jest atakowany:
@@ -300,7 +351,7 @@ bool Board::simulateNextMove(Coordinates c1, Coordinates c2, int color)
 	isCheck();
 
 	//niepoprawny ruch bialego
-	if (color == 0 && check_white)
+	if (p->pieceTypeToColor(p->getType()) == 0 && check_white)
 	{
 		for (int i = 0; i < 8; i++)
 		{
@@ -309,6 +360,13 @@ bool Board::simulateNextMove(Coordinates c1, Coordinates c2, int color)
 				_b[i][j] = _sim_b[i][j];
 			}
 		}
+
+		if (old != nullptr)
+		{
+			old->unsetCapturedInSim();
+		}
+
+		p->setPositionOnboard(c1);
 		resetFieldsUnderAttack();
 		Piece::setFieldsUnderAttack();
 		isCheck();
@@ -317,7 +375,7 @@ bool Board::simulateNextMove(Coordinates c1, Coordinates c2, int color)
 	}
 
 	//niepoprawny ruch czarnego
-	if (color == 1 && check_black)
+	if (p->pieceTypeToColor(p->getType()) == 1 && check_black)
 	{
 		for (int i = 0; i < 8; i++)
 		{
@@ -326,6 +384,14 @@ bool Board::simulateNextMove(Coordinates c1, Coordinates c2, int color)
 				_b[i][j] = _sim_b[i][j];
 			}
 		}
+
+		if (old != nullptr)
+		{
+			old->unsetCapturedInSim();
+		}
+
+		p->setPositionOnboard(c1);
+		resetFieldsUnderAttack();
 		Piece::setFieldsUnderAttack();
 		isCheck();
 
@@ -334,6 +400,21 @@ bool Board::simulateNextMove(Coordinates c1, Coordinates c2, int color)
 	}
 
 	//poprawny ruch
+	for (int i = 0; i < 8; i++)
+	{
+		for (int j = 0; j < 8; j++)
+		{
+			_b[i][j] = _sim_b[i][j];
+		}
+	}
+	if (old != nullptr)
+	{
+		old->unsetCapturedInSim();
+	}
+	p->setPositionOnboard(c1);
+	resetFieldsUnderAttack();
+	Piece::setFieldsUnderAttack();
+	isCheck();
 	return true;
 
 }
@@ -438,11 +519,11 @@ void Board::setFieldUnderAttack(Coordinates c,int color,int type)
 
 	if (color == 0)
 	{
-		_fieldsUnderAttackByWhite[c.getY()][c.getX()]++;
+		_fieldsUnderAttackByWhite[c.getY()][c.getX()] ++;
 	}
 	else
 	{
-		_fieldsUnderAttackByBlack[c.getY()][c.getX()]++;
+		_fieldsUnderAttackByBlack[c.getY()][c.getX()] ++;
 	}
 }
 

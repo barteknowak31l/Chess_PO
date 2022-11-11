@@ -134,8 +134,8 @@ bool Bishop::isMoveLegal(Coordinates c)
 		}
 
 		//capture
-		if (Board::getPieceTypeOnGivenCoords(c) != empty)
-			Board::capture(c);
+		//if (Board::getPieceTypeOnGivenCoords(c) != empty)
+			//Board::capture(c);
 
 		return true;
 	}
@@ -148,6 +148,11 @@ void Bishop::findFieldsUnderAttack()
 {
 	//sprawdzaj w 4 kierunkach az do wyjscia z planszy albo napotkania przeszkody
 	Coordinates tmp = positionOnBoard;
+	if (capturedInSimulation)
+	{
+		return;
+	}
+
 	int i = 1;
 
 	//up right

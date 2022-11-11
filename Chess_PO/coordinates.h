@@ -17,6 +17,8 @@ public:
 	bool operator == (Coordinates const c);
 	bool operator != (Coordinates const c);
 
+	void print();
+
 };
 
 #endif

@@ -141,8 +141,8 @@ bool Queen::diagonalMove(Coordinates c)
 		}
 
 		//capture
-		if (Board::getPieceTypeOnGivenCoords(c) != empty)
-			Board::capture(c);
+		//if (Board::getPieceTypeOnGivenCoords(c) != empty)
+			//Board::capture(c);
 
 		return true;
 	}
@@ -249,7 +249,7 @@ bool Queen::horizontalVerticalMove(Coordinates c)
 			if (color1 != color2)
 			{
 				std::cout << "Queen captured a piece!\n";
-				Board::capture(c);
+				//Board::capture(c);
 
 			}
 			else
@@ -273,6 +273,11 @@ bool Queen::horizontalVerticalMove(Coordinates c)
 
 void Queen::findFieldsUnderAttack()
 {
+	if (capturedInSimulation)
+	{
+		return;
+	}
+
 	diagonalUnderAttack();
 	horizontalVerticalUnderAttack();
 }
