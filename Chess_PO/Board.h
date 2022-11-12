@@ -72,6 +72,9 @@ private:
 	Queen* w_queens[1];
 	Queen* b_queens[1];
 
+	static Piece* w_promoted_pieces[8];
+	static Piece* b_promoted_pieces[8];
+
 	//board colors
 	sf::Color color1;
 	sf::Color color2;
@@ -85,6 +88,10 @@ private:
 	static int check_black;
 	static int hard_check_white;
 	static int hard_check_black;
+
+	//promotion counters
+	static int whitePromotions;
+	static int blackPromotions;
 
 	//private methods
 	void initPieces();
@@ -116,6 +123,8 @@ public:
 
 	static void castle(Piece*, Coordinates, int);
 
+	static void enPassant(Piece*, Coordinates, Coordinates);
+
 	//deletes a piece on given coordinates
 	static void capture(Coordinates);
 
@@ -130,6 +139,9 @@ public:
 
 	//nextMove simulation
 	static bool simulateNextMove(Piece*,Coordinates);
+
+	//pawnPromotion
+	static void pawnPromotion(Coordinates, Coordinates);
 
 	//setters
 	static void setFieldUnderAttack(Coordinates,int,int);

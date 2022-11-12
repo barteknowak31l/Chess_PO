@@ -39,6 +39,9 @@ protected:
 
 	bool firstMove;
 
+	//for pawns only
+	//int enPassantable;
+
 
 public:
 	Piece();
@@ -72,6 +75,9 @@ public:
 	static Piece* getPieceByCoords(Coordinates);
 	std::set<Coordinates*> getPossibleMoves();
 	bool getFirstMove();
+
+	//getter for pawn only
+	//int getEnpassantable();
 
 	//setters
 	void setPositionOnboard(Coordinates);

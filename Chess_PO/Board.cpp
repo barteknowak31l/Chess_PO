@@ -27,12 +27,20 @@ int Board::_sim_b[8][8];
 int Board::_sim_fieldsUnderAttackByWhite[8][8];
 int Board::_sim_fieldsUnderAttackByBlack[8][8];
 
+//promotion stuff
+Piece* Board::w_promoted_pieces[8];
+Piece* Board::b_promoted_pieces[8];
+int Board::blackPromotions;
+int Board::whitePromotions;
 
 Board::Board()
 {
 	turn = 0;
 	color1 = sf::Color::White;
 	color2 = sf::Color::Black;
+
+	whitePromotions = 0;
+	blackPromotions = 0;
 }
 
 Board::~Board()
@@ -343,8 +351,8 @@ void Board::castle(Piece* p, Coordinates c,int variant)
 	}
 	case 3: //black left rook
 	{
-		_b[0][3] = w_rook;
-		_b[0][2] = w_king;
+		_b[0][3] = b_rook;
+		_b[0][2] = b_king;
 		_b[0][0] = empty;
 		_b[0][4] = empty;
 
@@ -362,8 +370,8 @@ void Board::castle(Piece* p, Coordinates c,int variant)
 	}
 	case 4: //black right rook
 	{
-		_b[0][4] = w_rook;
-		_b[0][5] = w_king;
+		_b[0][4] = b_rook;
+		_b[0][5] = b_king;
 		_b[0][7] = empty;
 
 
@@ -383,6 +391,33 @@ void Board::castle(Piece* p, Coordinates c,int variant)
 
 
 	}
+}
+
+void Board::enPassant(Piece* p, Coordinates c1, Coordinates c2)
+{
+	//usun piece na c2
+	//przerzuc p na c1
+
+	//delete piece on coord c2
+	_b[c2.getY()][c2.getX()] = empty;
+	for (Piece* p : Piece::getInstances())
+	{
+		if (p->getPositionOnBoard() == c2)
+		{
+			delete p;
+		}
+	}
+
+	//move p to c1
+	_b[p->getPositionOnBoard().getY()][p->getPositionOnBoard().getX()] = empty;
+	p->setPositionOnboard(c1);
+	_b[p->getPositionOnBoard().getY()][p->getPositionOnBoard().getX()] = p->getType();
+
+	nextTurn();
+
+
+
+
 }
 
 bool Board::simulateNextMove(Piece* p, Coordinates c2)
@@ -645,7 +680,7 @@ bool Board::isMate(int color)
 					c->print();
 					std::cout << std::endl;
 
-					if (simulateNextMove(p, *c) && p->isMoveLegal(*c))
+					if (simulateNextMove(p, *c))
 					{
 						std::cout << "Znaleziono ruch bialego: " << p->getPositionOnBoard().getX() << " " << p->getPositionOnBoard().getY() << " -> " << c->getX() << " " << c->getY() << std::endl;
 						return false;
@@ -728,6 +763,74 @@ void Board::capture(Coordinates c)
 			return;
 		}
 	}
+
+}
+
+void Board::pawnPromotion(Coordinates c_pawn, Coordinates c_new)
+{
+	Piece* pawn = Piece::getPieceByCoords(c_pawn);
+	int color = pawn->pieceTypeToColor(pawn->getType());
+
+	//white
+	if (color == 0)
+	{
+		//create new piece
+		Queen *q = new Queen(c_new.getX(), c_new.getY(), color, w_queen);
+		w_promoted_pieces[whitePromotions] = (Piece*)q;
+		whitePromotions++;
+
+		//put new piece in logical representation
+		_b[c_new.getY()][c_new.getX()] = w_queen;
+
+		//remove old pawn from logical representation
+		_b[c_pawn.getY()][c_pawn.getX()] = empty;
+
+		//delete old pawn
+
+		for (Piece* p : Piece::getInstances())
+		{
+			if (p->getPositionOnBoard() == c_pawn)
+			{
+				delete p;
+			}
+		}
+
+
+	}
+
+	//black
+	if (color == 1)
+	{
+		//create new piece
+		Queen* q = new Queen(c_new.getX(), c_new.getY(), color, b_queen);
+		b_promoted_pieces[whitePromotions] = (Piece*)q;
+		blackPromotions++;
+
+		//put new piece in logical representation
+		_b[c_new.getY()][c_new.getX()] = b_queen;
+
+		//remove old pawn from logical representation
+		_b[c_pawn.getY()][c_pawn.getX()] = empty;
+
+		//delete old pawn
+
+		for (Piece* p : Piece::getInstances())
+		{
+			if (p->getPositionOnBoard() == c_pawn)
+			{
+				delete p;
+			}
+		}
+
+
+	}
+
+
+
+
+
+
+	nextTurn();
 
 }
 

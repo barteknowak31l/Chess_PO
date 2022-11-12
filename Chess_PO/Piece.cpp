@@ -17,6 +17,7 @@ Piece::Piece()
 	isActive = false;
 	capturedInSimulation = false;
 	firstMove = true;
+	//enPassantable = 5;
 
 }
 
@@ -277,3 +278,8 @@ bool Piece::getFirstMove()
 {
 	return firstMove;
 }
+
+//int Piece::getEnpassantable()
+//{
+//	return enPassantable;
+//}

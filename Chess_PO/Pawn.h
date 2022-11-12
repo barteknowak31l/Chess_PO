@@ -11,6 +11,11 @@ private:
 	bool firstMove;
 	void addRemainingPossibleMoves();
 
+	bool promote(Coordinates);
+
+	int enPassantable;
+	int enPassant(Coordinates);
+
 	public:
 	sf::Texture texture;
 	Pawn();
@@ -20,6 +25,11 @@ private:
 	bool isMoveLegal(Coordinates);
 	void findFieldsUnderAttack();
 	void findAllPossibleMoves();
+
+
+	//getter
+	int getEnpassantable();
+
 
 };
 

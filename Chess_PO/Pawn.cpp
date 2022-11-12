@@ -29,6 +29,7 @@ Pawn::Pawn(int x, int y, int color,int t)
 	instances.insert(this);
 
 	firstMove = true;
+	enPassantable = 0;
 
 	std::cout << "PawnConstructor\n";
 }
@@ -45,19 +46,52 @@ bool Pawn::isMoveLegal(Coordinates c)
 	//moze ruszyc sie tylko do przodu i  tylko jesli przed nim nic nie stoi
 	//moze ruszyc sie na bok jesli stoi tam przeciwnik - BICIE
 
+
+	if (promote(c))
+	{
+		std::cout << "PROMOCJA\n";
+		Board::pawnPromotion(positionOnBoard, c);
+		return false;
+	}
+
+	int en = enPassant(c);
+	if (en > 0)
+	{
+		Coordinates tmp = positionOnBoard;
+		std::cout << "EN PASSANT\n";
+		switch (en)
+		{
+		case 1:
+		{
+			tmp.setX(positionOnBoard.getX() + 1);
+			Board::enPassant(this, c, tmp);
+			break;
+		}
+		case 2:
+		{
+			tmp.setX(positionOnBoard.getX() - 1);
+			Board::enPassant(this, c, tmp);
+			break;
+		}
+		}
+
+	}
+
+
 	if (type == b_pawn)
 	{
 		if (firstMove)
 		{
 
 			//check +2 move
-			if (c.getY() - positionOnBoard.getY() == 2 && c.getX() - positionOnBoard.getX() == 0)
+			if (c.getY() - positionOnBoard.getY() == 2 && c.getX() - positionOnBoard.getX() == 0 && Board::getPieceTypeOnGivenCoords(c) == empty)
 			{
 				firstMove = false;
+				enPassantable = 1;
 				return true;
 			}
 			//check +1 move
-			if (c.getY() - positionOnBoard.getY() == 1 && c.getX() - positionOnBoard.getX() == 0)
+			if (c.getY() - positionOnBoard.getY() == 1 && c.getX() - positionOnBoard.getX() == 0 && Board::getPieceTypeOnGivenCoords(c) == empty)
 			{
 				firstMove = false;
 				return true;
@@ -81,9 +115,12 @@ bool Pawn::isMoveLegal(Coordinates c)
 		else
 		{
 			//check +1 move
-			if (c.getY() - positionOnBoard.getY() == 1 && c.getX() - positionOnBoard.getX() == 0)
+			if (c.getY() - positionOnBoard.getY() == 1 && c.getX() - positionOnBoard.getX() == 0 && Board::getPieceTypeOnGivenCoords(c) == empty)
 			{
-
+				if (enPassantable == 1)
+				{
+					enPassantable = 0;
+				}
 				return true;
 			}
 			//check capture
@@ -95,7 +132,10 @@ bool Pawn::isMoveLegal(Coordinates c)
 					int color2 = pieceTypeToColor(Board::getPieceTypeOnGivenCoords(c));
 					if (color1 != color2)
 					{
-						//Board::capture(c);
+						if (enPassantable == 1)
+						{
+							enPassantable = 0;
+						}
 						return true;
 					}
 				}
@@ -110,13 +150,14 @@ bool Pawn::isMoveLegal(Coordinates c)
 		{
 
 			//check +2 move
-			if (positionOnBoard.getY() - c.getY() == 2 && c.getX() - positionOnBoard.getX() == 0)
+			if (positionOnBoard.getY() - c.getY() == 2 && c.getX() - positionOnBoard.getX() == 0 && Board::getPieceTypeOnGivenCoords(c) == empty)
 			{
 				firstMove = false;
+				enPassantable = 1;
 				return true;
 			}
 			//check +1 move
-			if (positionOnBoard.getY() - c.getY() == 1 && c.getX() - positionOnBoard.getX() == 0)
+			if (positionOnBoard.getY() - c.getY() == 1 && c.getX() - positionOnBoard.getX() == 0 && Board::getPieceTypeOnGivenCoords(c) == empty)
 			{
 				firstMove = false;
 				return true;
@@ -140,9 +181,12 @@ bool Pawn::isMoveLegal(Coordinates c)
 		else
 		{
 			//check +1 move
-			if (positionOnBoard.getY() - c.getY() == 1 && c.getX() - positionOnBoard.getX() == 0)
+			if (positionOnBoard.getY() - c.getY() == 1 && c.getX() - positionOnBoard.getX() == 0 && Board::getPieceTypeOnGivenCoords(c) == empty)
 			{
-
+				if (enPassantable == 1)
+				{
+					enPassantable = 0;
+				}
 				return true;
 			}
 			//check capture
@@ -154,7 +198,10 @@ bool Pawn::isMoveLegal(Coordinates c)
 					int color2 = pieceTypeToColor(Board::getPieceTypeOnGivenCoords(c));
 					if (color1 != color2)
 					{
-						//Board::capture(c);
+						if (enPassantable == 1)
+						{
+							enPassantable = 0;
+						}
 						return true;
 					}
 				}
@@ -164,8 +211,36 @@ bool Pawn::isMoveLegal(Coordinates c)
 
 	
 
-	std::cout << "INCORRECT PAWN MOVE :(\n";
+	std::cout << "INCORRECT PAWN MOVE :( enpassantable: "<<enPassantable<<std::endl;
 	return false;
+}
+
+bool Pawn::promote(Coordinates c)
+{
+	if (type == b_pawn)
+	{
+		if (c.getY() - positionOnBoard.getY() == 1 && c.getX() - positionOnBoard.getX() == 0 && Board::getPieceTypeOnGivenCoords(c) == empty)
+		{
+			if (c.getY() == 7)
+			{
+				return true;
+			}
+		}
+	}
+
+	if (type == w_pawn)
+	{
+		if (positionOnBoard.getY() - c.getY() == 1 && c.getX() - positionOnBoard.getX() == 0 && Board::getPieceTypeOnGivenCoords(c) == empty)
+		{
+			if (c.getY() == 0)
+			{
+				return true;
+			}
+		}
+	}
+
+	return false;
+
 }
 
 void Pawn::findFieldsUnderAttack()
@@ -336,4 +411,97 @@ void Pawn::addRemainingPossibleMoves()
 			addCoordsToSet(tmp);
 		}
 	}
+}
+
+int Pawn::enPassant(Coordinates c)
+{
+	Coordinates tmp;
+	if (type == b_pawn)
+	{
+		//find out on which we try to en passant
+		//to right
+		if (c.getX() - positionOnBoard.getX() == 1 && c.getY() - positionOnBoard.getY() == 1)
+		{
+			//check if theres w_pawn on the right
+			tmp.setX(positionOnBoard.getX() + 1);
+			tmp.setY(positionOnBoard.getY());
+			if (Board::getPieceTypeOnGivenCoords(tmp) == w_pawn)
+			{
+				//check if that w_pawn is enPassantable
+				if (((Pawn*)getPieceByCoords(tmp))->getEnpassantable() == 1)
+				{
+					//EN PASSANT
+					return 1;
+				}
+			}
+		}
+		//to left
+		if (positionOnBoard.getX() - c.getX() == 1 && c.getY() - positionOnBoard.getY() == 1)
+		{
+			//check if theres w_pawn on the left
+			tmp.setX(positionOnBoard.getX() - 1);
+			tmp.setY(positionOnBoard.getY());
+			if (Board::getPieceTypeOnGivenCoords(tmp) == w_pawn)
+			{
+				//check if that w_pawn is enPassantable
+				if (((Pawn*)getPieceByCoords(tmp))->getEnpassantable() == 1)
+				{
+					//EN PASSANT
+					return 2;
+				}
+
+			}
+		}
+
+	}
+
+	if (type == w_pawn)
+	{
+		//find out on which we try to en passant
+		//to right
+		if (c.getX() - positionOnBoard.getX() == 1 && positionOnBoard.getY() - c.getY() == 1)
+		{
+			//check if theres b_pawn on the right
+			tmp.setX(positionOnBoard.getX() + 1);
+			tmp.setY(positionOnBoard.getY());
+			if (Board::getPieceTypeOnGivenCoords(tmp) == b_pawn)
+			{
+				//check if that b_pawn is enPassantable
+				if (((Pawn*)getPieceByCoords(tmp))->getEnpassantable() == 1)
+				{
+					//EN PASSANT
+					return 1;
+				}
+			}
+		}
+		//to left
+		if (positionOnBoard.getX() - c.getX() == 1 && positionOnBoard.getY() - c.getY() == 1)
+		{
+			//check if theres b_pawn on the left
+			tmp.setX(positionOnBoard.getX() - 1);
+			tmp.setY(positionOnBoard.getY());
+			if (Board::getPieceTypeOnGivenCoords(tmp) == b_pawn)
+			{
+				//check if that b_pawn is enPassantable
+				if (((Pawn*)getPieceByCoords(tmp))->getEnpassantable() == 1)
+				{
+					//EN PASSANT
+					return 2;
+				}
+
+			}
+		}
+
+	}
+
+
+
+	return 0;
+}
+
+
+//getters
+int Pawn::getEnpassantable()
+{
+	return enPassantable;
 }
