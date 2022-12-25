@@ -7,12 +7,12 @@
 #include <SFML\Window.hpp>
 
 class Piece;
-class Rook;
 class Pawn;
+class Rook;
 class Knight;
 class Bishop;
-class King;
 class Queen;
+class King;
 
 
 class Board
@@ -34,21 +34,21 @@ private:
 	static int _fieldsUnderAttackByBlack[8][8];
 
 
-	//nextMove simulation
+	//boards for nextMove simulation 
 	static int _sim_b[8][8];
 	static int _sim_fieldsUnderAttackByWhite[8][8];
 	static int _sim_fieldsUnderAttackByBlack[8][8];
 
-	//fields
+	//fields - visual representation
 	static sf::RectangleShape fields[8][8];
 	
 	//positions of pieces on board
-		//positions on board are stored as follows
+	//positions on board are stored as follows
 	// 0 1 2 3 4 5 6 7
 	// 8 9 10 11 12 ...
-	//.
-	//.
-	//.
+	//...
+	//...
+	//...
 	//...     61 62 63
 	static sf::Vector2f piecesPositions[8][8];
 
@@ -80,30 +80,81 @@ private:
 	sf::Color color2;
 
 
-	//turn indicator
+	//turn indicator 0 -white 1 - black
 	static int turn;
 
 	//check indicators
+	//when kings are attacked once
 	static int check_white;
 	static int check_black;
+	
+	//when kings are attacked more than once
 	static int hard_check_white;
 	static int hard_check_black;
+
+	//to check if somebody won
+	static int whiteWon;
+	static int blackWon;
+	static int staleMate;
+
+	//to display info about game
+	sf::Font font;
+	sf::Text infoText;
 
 	//promotion counters
 	static int whitePromotions;
 	static int blackPromotions;
 
 	//private methods
+
+	//initializes pieces of both colors on board - creates new Piece objects and stores them in arrays of same type
 	void initPieces();
+
+	//the function to print messages on the right side of screen
+	void handleInfoText();
+	
+	//initializes messagebox on the right of the screen
+	void initInfoText();
+
+	//the function calculates the point where the piece should be drawn for each field 
 	void calculatePiecesPositions();
+
+	//prepare game logic for the next turn
 	static void nextTurn();
+
+	//functions to check state of a game
 
 	static void isCheck();
 	static bool isMate(int);
 	static bool isStaleMate(int);
 
-	//utility
+
+	//utility function to get color of piece by given piece type
 	static int pieceTypeToColor(int);
+
+	//moves a piece to given coordinates on board
+	static void move(Piece*, Coordinates);
+
+	//performs "castle" in game logic - roszada
+	static void castle(Piece*, Coordinates, int);
+
+	//performs "enPassant" in game logic - bicie w przelocie
+	static void enPassant(Piece*, Coordinates, Coordinates);
+
+	//performs a capture - deletes a piece on given coordinates
+	static void capture(Coordinates);
+
+	//draws board fields and messagebox
+	void drawBoard(sf::RenderWindow& target);
+
+	//utility - returns position of the field in pixels from the given logical representation of the field
+	static sf::Vector2f boardToScreenPos(int, int);
+
+	//utility - returns logical position of the field from the given position of mouse in pixels
+	static int* screenToBoardPos(sf::Vector2f);
+
+	//performs a promotion of a pawn to queen in logical reprasentation, also deletes pawn and creates object
+	static void pawnPromotion(Coordinates, Coordinates);
 
 
 public:
@@ -112,48 +163,44 @@ public:
 	Board();
 	~Board();
 
+	//initializes board - sets flags to default and initializes pieces on board
 	void init();
 
 	//called once each frame
 	void update(sf::RenderWindow&);
 
 
-	//moves a piece to given coordinates on board
-	static void move(Piece*,Coordinates);
-
-	static void castle(Piece*, Coordinates, int);
-
-	static void enPassant(Piece*, Coordinates, Coordinates);
-
-	//deletes a piece on given coordinates
-	static void capture(Coordinates);
-
-	//add later -reverses sides of balck and white - useful in 2 player game
-	void reverse();
-
-	void drawBoard(sf::RenderWindow& target);
-
-	static sf::Vector2f boardToScreenPos(int, int);
-	static int* screenToBoardPos(sf::Vector2f);
 
 
-	//nextMove simulation
+
+	//nextMove simulation - checks if next move is legal - in terms of:	 capturing own piece, trying to capture nothing (when moving pawn), trying to move a piece, which was pinned to a king
 	static bool simulateNextMove(Piece*,Coordinates);
 
-	//pawnPromotion
-	static void pawnPromotion(Coordinates, Coordinates);
+
 
 	//setters
+
+	//increments appropriate position in _fieldsUnderAttack array if a field is under attack
 	static void setFieldUnderAttack(Coordinates,int,int);
+
+	//sets all values in _fieldsUnderAttact array to 0
 	static void resetFieldsUnderAttack();
 
 	//set colors of board
 	void setColorsofBoard(sf::Color, sf::Color);
 
 	//getters
+
+	//returns piece position on given logical field representation
 	sf::Vector2f getPiecesPositions(int,int);
+
+	//returns piece type on given logical representation (in coordinates)
 	static int getPieceTypeOnGivenCoords(Coordinates);
+
+	//returns turn indicator
 	static int getTurn();
+
+	//returns a number of attackers of given color(int) on given field (in coordinates)
 	static int getFieldUnderAttack(Coordinates, int);
 
 	//debug

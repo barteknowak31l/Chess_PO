@@ -11,6 +11,12 @@
 #include "Queen.h"
 
 
+//init static variables
+
+int Board::blackWon;
+int Board::whiteWon;
+int Board::staleMate;
+
 sf::RectangleShape Board::fields[8][8];
 int Board::_b[8][8];
 sf::Vector2f Board::piecesPositions[8][8];
@@ -33,6 +39,8 @@ Piece* Board::b_promoted_pieces[8];
 int Board::blackPromotions;
 int Board::whitePromotions;
 
+
+
 Board::Board()
 {
 	turn = 0;
@@ -45,11 +53,13 @@ Board::Board()
 
 Board::~Board()
 {
+	//delete all pieces
 	for (Piece* p : Piece::getInstances())
 	{
 		delete p;
 	}
 
+	//reset logical representation of board - static array 
 	for (int i = 0; i < 8; i++)
 	{
 		for (int j = 0; j < 8; j++)
@@ -63,6 +73,16 @@ Board::~Board()
 
 void Board::init()
 {
+	blackWon = false;
+	whiteWon = false;
+	staleMate = false;
+	turn = 0;
+	check_white = false;
+	check_black = false;
+
+	//initialize messagebox
+	initInfoText();
+
 	_b[0][0] = b_rook;
 	_b[0][1] = b_knight;
 	_b[0][2] = b_bishop;
@@ -114,7 +134,7 @@ void Board::init()
 	}
 
 
-	//init piece objects
+	//initialize piece objects
 	initPieces();
 
 }
@@ -170,20 +190,88 @@ void Board::initPieces()
 
 }
 
+void Board::initInfoText()
+{
+	if (!font.loadFromFile("sugar_snow.ttf"))
+	{
+		std::cout << "No font file detected\n";
+		exit(-1);
+	}
+
+	infoText.setFont(font);
+	//winText.setString("temporary");
+	infoText.setString("White to move\n");
+	infoText.setCharacterSize(24);
+	infoText.setPosition(sf::Vector2f(630, 200));
+	infoText.setFillColor(sf::Color::White);
+	infoText.setStyle(sf::Text::Bold);
+	infoText.setOrigin(sf::Vector2f(infoText.getGlobalBounds().width / 2, infoText.getGlobalBounds().height / 2));
+
+}
+
 void Board::update(sf::RenderWindow& window)
 {
 	drawBoard(window);
+	handleInfoText();
 	calculatePiecesPositions();
 }
 
+void Board::handleInfoText()
+{
+	if (turn == 0)
+	{
+		infoText.setString("White to move\n");
+	}
+	if (turn == 1)
+	{
+		infoText.setString("Black to move\n");
+	}
+
+	if (check_white)
+	{
+		infoText.setString("       CHECK!\n\nWhite to move\n");
+	}
+	if (check_black)
+	{
+		infoText.setString("       CHECK!\n\nBlack to move\n");
+	}
+
+
+	if (blackWon)
+	{
+		infoText.setString("Black won by checkmate!\n\nPress R to restart game.\n");
+	}
+	if (whiteWon)
+	{
+		infoText.setString("White won by checkmate!\n\nPress R to restart game.\n");
+	}
+	if (staleMate)
+	{
+		infoText.setString("           StaleMate!\n\nPress R to restart game.\n");
+	}
+
+
+}
 
 void Board::drawBoard(sf::RenderWindow& target)
 {
-	//find proper size of field
+
+	//find appropriate size of field
 	float x = target.getSize().x * 0.75;
 	float y = target.getSize().y;
+
+	float textSize = std::min(x, y);
+	float textSizeScale = 20;
 	float size = std::min(x, y) / 8;
 
+
+	//dipslay infoText
+	infoText.setCharacterSize(textSize / textSizeScale);
+	infoText.setOrigin(sf::Vector2f(infoText.getGlobalBounds().width / 2, infoText.getGlobalBounds().height / 2));
+	infoText.setPosition(sf::Vector2f(textSize + (target.getSize().x - textSize) / 2, textSize / 3));
+
+	target.draw(infoText);
+	
 
 	//set fields positions and size
 	x = 0;
@@ -201,7 +289,7 @@ void Board::drawBoard(sf::RenderWindow& target)
 	}
 
 
-	//set proper colors
+	//set appropriate colors
 	x = 0;
 	y = 0;
 	int col = 1;
@@ -249,7 +337,6 @@ int* Board::screenToBoardPos(sf::Vector2f mousePos)
 	}
 }
 
-
 void Board::calculatePiecesPositions()
 {
 	for (int i = 0; i < 8; i++)
@@ -268,32 +355,27 @@ void Board::setColorsofBoard(sf::Color c1, sf::Color c2)
 	color2 = c2;
 }
 
-
 void Board::move(Piece* p, Coordinates c)
 {
+	//check if the input is right i.e if bishop was moved diagonally with the mouse or if a piece is not trying to "jump" over another piece
+	//it's a virtual function
 	if (p->isMoveLegal(c) == 0)
 	{
-		//std::cout << "NIEPOPRAWNY RUCH\n";
 		return;
 	}
 
+	//check if next move is legal
 	if (simulateNextMove(p, c) == 0)
 	{
-		//std::cout << "KROL POD SZACHEM\n";
 		return;
 	}
-
-
-
-
-	//std::cout<<"RUCH ZAAKCEPTOWANY!\n";
 
 	capture(c);
 
 	//set old logical position to empty state
 	_b[p->getPositionOnBoard().getY()][p->getPositionOnBoard().getX()] = empty;
 
-	//set new position to piece object
+	//set new position in piece object
 	p->setPositionOnboard(c);
 
 	//set new position of piece in logical representation of board
@@ -305,6 +387,9 @@ void Board::move(Piece* p, Coordinates c)
 
 void Board::castle(Piece* p, Coordinates c,int variant)
 {
+	//get rook piece from given coordinates (c)
+	//move king and rook according to given variant of castle
+
 	Piece* rook = Piece::getPieceByCoords(c);
 	Coordinates r;
 	Coordinates k;
@@ -313,11 +398,14 @@ void Board::castle(Piece* p, Coordinates c,int variant)
 	{
 	case 1: //white left rook
 	{
+
+		//change logical representation of pieces on board
 		_b[7][3] = w_rook;
 		_b[7][2] = w_king;
 		_b[7][0] = empty;
 		_b[7][4] = empty;
 
+		//set new coordinates in pieces objects
 		r.setX(3);
 		r.setY(7);
 		k.setX(2);
@@ -332,11 +420,12 @@ void Board::castle(Piece* p, Coordinates c,int variant)
 	}
 	case 2: //white right rook
 	{
+		//change logical representation of pieces on board
 		_b[7][4] = w_rook;
 		_b[7][5] = w_king;
 		_b[7][7] = empty;
 
-
+		//set new coordinates in pieces objects
 		r.setX(4);
 		r.setY(7);
 		k.setX(5);
@@ -351,11 +440,13 @@ void Board::castle(Piece* p, Coordinates c,int variant)
 	}
 	case 3: //black left rook
 	{
+		//change logical representation of pieces on board
 		_b[0][3] = b_rook;
 		_b[0][2] = b_king;
 		_b[0][0] = empty;
 		_b[0][4] = empty;
 
+		//set new coordinates in pieces objects
 		r.setX(3);
 		r.setY(0);
 		k.setX(2);
@@ -370,16 +461,16 @@ void Board::castle(Piece* p, Coordinates c,int variant)
 	}
 	case 4: //black right rook
 	{
+		//change logical representation of pieces on board
 		_b[0][4] = b_rook;
 		_b[0][5] = b_king;
 		_b[0][7] = empty;
 
-
+		//set new coordinates in pieces objects
 		r.setX(4);
 		r.setY(0);
 		k.setX(5);
 		k.setY(0);
-
 
 		p->setPositionOnboard(k);
 		rook->setPositionOnboard(r);
@@ -395,8 +486,8 @@ void Board::castle(Piece* p, Coordinates c,int variant)
 
 void Board::enPassant(Piece* p, Coordinates c1, Coordinates c2)
 {
-	//usun piece na c2
-	//przerzuc p na c1
+	//delete piece from c2
+	//move piece p to c1
 
 	//delete piece on coord c2
 	_b[c2.getY()][c2.getX()] = empty;
@@ -413,6 +504,7 @@ void Board::enPassant(Piece* p, Coordinates c1, Coordinates c2)
 	p->setPositionOnboard(c1);
 	_b[p->getPositionOnBoard().getY()][p->getPositionOnBoard().getX()] = p->getType();
 
+	//go to next turn
 	nextTurn();
 
 
@@ -422,10 +514,15 @@ void Board::enPassant(Piece* p, Coordinates c1, Coordinates c2)
 
 bool Board::simulateNextMove(Piece* p, Coordinates c2)
 {
+	//p - piece that is moving
+	//c1 - coordinates of moving piece
+	//old - piece that is on coordinates that p moves to - NULL if theres no piece
+	//c2 - coordinates that p moves to
+
 	Coordinates c1 = p->getPositionOnBoard();
 	Piece* old = Piece::getPieceByCoords(c2);
 
-	//proba zbicia wlasnej figury
+	//check if player tries to capture own piece
 	if (old != nullptr)
 	{
 		if (old->pieceTypeToColor(old->getType()) == p->pieceTypeToColor(p->getType()))
@@ -433,8 +530,10 @@ bool Board::simulateNextMove(Piece* p, Coordinates c2)
 			return false;
 		}
 	}
+	
+	//simulate next move
 
-	//kopiuj aktualna tablice board
+	//copy logical board representation
 	for (int i = 0; i < 8; i++)
 	{
 		for (int j = 0; j < 8; j++)
@@ -443,50 +542,45 @@ bool Board::simulateNextMove(Piece* p, Coordinates c2)
 		}
 	}
 
-	//zmien koordynaty w obiekcie piece p
+	//change coordinates in object p
 	p->setPositionOnboard(c2);
 
-	//zasymuluj bicie
+	//if theres a piece on coords c2, try to perform a capture
 	if (getPieceTypeOnGivenCoords(c2) != empty)
 	{
 		if (old == nullptr) {
 			
-			//std::cout << "TU NIC NIE MA\n ale jest wylapywane:: " << getPieceTypeOnGivenCoords(c2) << std::endl;
 			return false;
 		}
 
-		//std::cout << "TU COS JEST: " << getPieceTypeOnGivenCoords(c2) << std::endl;
+		//set appropriate flag in captured piece object
 		old->setCapturedInSim();
 
 	}
 
 
-	//wykonaj ruch na starej tablicy
+	//make a move in original logical board representation
 	_b[c2.getY()][c2.getX()] = getPieceTypeOnGivenCoords(c1);
 	_b[c1.getY()][c1.getX()] = empty;
 
 
-	//std::cout << "TABLICA PO ATAKU\n----------------\n";
-	//printBoard();
 
-	//symuluj atak
+	//simulate new attacks after making a move
 	resetFieldsUnderAttack();
 	Piece::setFieldsUnderAttack();
 
-	//std::cout << "ATAK WHITE\n----------------\n";
-	//printUnderAttackWhite();
 
+	//check if kings are under attack
+	// - yes - incorrect move
+	// - no - correct move 
 
-	//sprawdz czy krol danego koloru jest atakowany:
-	// - tak - przywroc stara tablice i wywolaj potem setfieldsunderattack
-	// - nie - poprawny ruch do nothing
-
-	//ustawia flagi
+	//check if kings are under attack
 	isCheck();
 
-	//niepoprawny ruch bialego
+	//incorrect white move
 	if (p->pieceTypeToColor(p->getType()) == 0 && check_white)
 	{
+		//restore logical board state
 		for (int i = 0; i < 8; i++)
 		{
 			for (int j = 0; j < 8; j++)
@@ -495,22 +589,30 @@ bool Board::simulateNextMove(Piece* p, Coordinates c2)
 			}
 		}
 
+		//unset flag of piece captured in simulation
 		if (old != nullptr)
 		{
 			old->unsetCapturedInSim();
 		}
 
+		//restore logical position stored in object
 		p->setPositionOnboard(c1);
+
+		//restore fieldsUnderAttack
 		resetFieldsUnderAttack();
 		Piece::setFieldsUnderAttack();
+		
+		//restore flags
 		isCheck();
 
+		//return incorrect move
 		return false;
 	}
 
-	//niepoprawny ruch czarnego
+	//incorrect black move
 	if (p->pieceTypeToColor(p->getType()) == 1 && check_black)
 	{
+		//restore logical board state
 		for (int i = 0; i < 8; i++)
 		{
 			for (int j = 0; j < 8; j++)
@@ -519,46 +621,68 @@ bool Board::simulateNextMove(Piece* p, Coordinates c2)
 			}
 		}
 
+		//unset flag of piece captured in simulation
 		if (old != nullptr)
 		{
 			old->unsetCapturedInSim();
 		}
 
+		//restore logical position stored in object
 		p->setPositionOnboard(c1);
+
+		//restore fieldsUnderAttack
 		resetFieldsUnderAttack();
 		Piece::setFieldsUnderAttack();
+
+		//restore flags
 		isCheck();
 
+		//return incorrect move
 		return false;
 
 	}
 
-	//poprawny ruch
+	//correct move 
 	for (int i = 0; i < 8; i++)
 	{
+		//restore logical board state
 		for (int j = 0; j < 8; j++)
 		{
 			_b[i][j] = _sim_b[i][j];
 		}
 	}
+
+	//unset flag of piece captured in simulation
 	if (old != nullptr)
 	{
 		old->unsetCapturedInSim();
 	}
+
+	//restore logical position stored in object
 	p->setPositionOnboard(c1);
+	
+	//restore fieldsUnderAttack
 	resetFieldsUnderAttack();
 	Piece::setFieldsUnderAttack();
+	
+	//restore flags
 	isCheck();
+
+	//return correct move
 	return true;
 
 }
 
 void Board::nextTurn()
 {
+	//calculate fields under attack again
 	resetFieldsUnderAttack();
 	Piece::setFieldsUnderAttack();
+
+	//find out if theres a check
 	isCheck();
 
+	//change turn indicator
 	if (turn == 0)
 	{
 		turn = 1;
@@ -568,41 +692,18 @@ void Board::nextTurn()
 		turn = 0;
 	}
 
-	if (check_black || check_white)
-	{
-		std::cout << "SZACH!\n";
-	}
-
-
+	//determine if theres a stalemate
 	if (isStaleMate(turn))
 	{
-		if (turn == 0)
-		{
-			std::cout << "PAT! Bialy nie ma ruchu\n";
-		}
-		else if (turn == 1)
-		{
-			std::cout << "PAT! Czarny nie ma ruchu\n";
-		}
+		staleMate = true;
 	}
 
-	if (isMate(turn) && (check_black || check_white))
-	{
-		if (turn == 0 && check_white)
-		{
-			std::cout << "CZARNE DALY MATA\n";
-		}
-		else if(turn == 1 && check_black)
-		{
-			std::cout << "BIALE DALY MATA\n";
-		}
-	}
 
 }
 
 void Board::isCheck()
 {
-	//znajdz krole, sprawdz czy te pola sa atakowane
+	//find both kings and check if they're under attack
 	Coordinates pos_w_king;
 	Coordinates pos_b_king;
 
@@ -662,24 +763,21 @@ void Board::isCheck()
 
 bool Board::isMate(int color)
 {
-	//color == 0 sprawdz czy bialy ma mata
+	//color == 0 check if white is checkmate'd
 	if (color == 0)
 	{
 		for (Piece* p : Piece::getInstances())
 		{
-			//wszystkie biale figury 
+			//for all white pieces
 			if (p->pieceTypeToColor(p->getType()) == 0)
 			{
+
 				p->findAllPossibleMoves();
 
 				for (Coordinates *c : p->getPossibleMoves())
 				{
-					std::cout << "FIGURA NA: ";
-					p->getPositionOnBoard().print();
-					std::cout << " ATAKUJE ";
-					c->print();
-					std::cout << std::endl;
 
+					//if there is a possible move, then theres no checkmate
 					if (simulateNextMove(p, *c))
 					{
 						std::cout << "Znaleziono ruch bialego: " << p->getPositionOnBoard().getX() << " " << p->getPositionOnBoard().getY() << " -> " << c->getX() << " " << c->getY() << std::endl;
@@ -690,24 +788,20 @@ bool Board::isMate(int color)
 		}
 	}
 
-	//color == 1 sprawdz czy czarny ma mata
+	//color == 1 check if black is checkmate'd
 	if (color == 1)
 	{
 		for (Piece* p : Piece::getInstances())
 		{
-			//wszystkie czarne figury 
+			//for all black pieces
 			if (p->pieceTypeToColor(p->getType()) == 1)
 			{
 				p->findAllPossibleMoves();
 
 				for (Coordinates *c : p->getPossibleMoves())
 				{
-					std::cout << "FIGURA NA: ";
-					p->getPositionOnBoard().print();
-					std::cout << " ATAKUJE ";
-					c->print();
-					std::cout << std::endl;
 
+					//if there is a possible move, then theres no checkmate
 					if (simulateNextMove(p, *c))
 					{
 						std::cout << "Znaleziono ruch czarnego: " << p->getPositionOnBoard().getX() << " " << p->getPositionOnBoard().getY() << " -> " << c->getX() << " " << c->getY() << std::endl;
@@ -718,33 +812,45 @@ bool Board::isMate(int color)
 		}
 	}
 
+
+	//theres a checkmate - set appropriate flags
+	if (color == 0)
+	{
+		blackWon = 1;
+	}
+
+	if (color == 1)
+	{
+		whiteWon = 1;
+	}
+
 	return true;
 
 }
 
 bool Board::isStaleMate(int color)
 {
-	//sprawdz czy bialy ma jakis ruch, ktory jest legalny i czy nie ma szacha
+	//check if white is not under check and if he has any move which is legal 
 	if (color == 0)
 	{
-		//pat
+		//stalemate
 		if (isMate(color) && !check_white)
 		{
 			return true;
 		}
 	}
 
-	//sprawdz czy czarny ma jakis ruch, ktory jest legalny i czy nie ma szacha
+	//check if black is not under check and if he has any move which is legal 
 	if (color == 1)
 	{
-		//pat
+		//stalemate
 		if (isMate(color) && !check_black)
 		{
 			return true;
 		}
 	}
 	
-	//nie ma pata
+	//not a stalemate
 	return false;
 
 }
@@ -753,7 +859,6 @@ void Board::capture(Coordinates c)
 {
 	//get piece on coords c
 	//destroy that piece
-	//change score - add later
 	
 	for (Piece* p : Piece::getInstances())
 	{
@@ -768,8 +873,18 @@ void Board::capture(Coordinates c)
 
 void Board::pawnPromotion(Coordinates c_pawn, Coordinates c_new)
 {
+	
 	Piece* pawn = Piece::getPieceByCoords(c_pawn);
 	int color = pawn->pieceTypeToColor(pawn->getType());
+
+	//delete old piece if there was a capture:
+	for (Piece* p : Piece::getInstances())
+	{
+		if (p->getPositionOnBoard() == c_new)
+		{
+			delete p;
+		}
+	}
 
 	//white
 	if (color == 0)
@@ -837,7 +952,6 @@ void Board::pawnPromotion(Coordinates c_pawn, Coordinates c_new)
 //setters
 void Board::setFieldUnderAttack(Coordinates c,int color,int type)
 {
-
 	if (color == 0)
 	{
 		_fieldsUnderAttackByWhite[c.getY()][c.getX()] ++;
@@ -880,12 +994,10 @@ int Board::getFieldUnderAttack(Coordinates c, int color)
 {
 	if (color == 0)
 	{
-		//std::cout << "checking white " << c.getX() << c.getY() << _fieldsUnderAttackByWhite[c.getY()][c.getX()] << std::endl;;
 		return _fieldsUnderAttackByWhite[c.getY()][c.getX()];
 	}
 	else if (color == 1)
 	{
-		//std::cout << "checking black " << c.getX() << c.getY() << _fieldsUnderAttackByBlack[c.getY()][c.getX()] << std::endl;
 		return _fieldsUnderAttackByBlack[c.getY()][c.getX()];
 	}
 

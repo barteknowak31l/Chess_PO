@@ -10,6 +10,7 @@ class Pawn : Piece
 private:
 	bool firstMove;
 	void addRemainingPossibleMoves();
+	void addPossibleEnPassants();
 
 	bool promote(Coordinates);
 

@@ -39,6 +39,11 @@ const std::set<Piece*>& Piece::getInstances()
 
 void Piece::drawPieces(sf::RenderWindow& target, Board &b)
 {
+	//scale pieces with window size
+	float x = target.getSize().x * 0.75;
+	float y = target.getSize().y;
+	float size = std::min(x, y) / 8;
+
 
 	for(Piece* p : Piece::getInstances())
 	{
@@ -51,6 +56,8 @@ void Piece::drawPieces(sf::RenderWindow& target, Board &b)
 			p->sprite.setPosition(b.getPiecesPositions(p->positionOnBoard.getX(), p->positionOnBoard.getY()));
 		}
 		
+		p->sprite.setScale(size/90,size/90);
+
 		target.draw(p->sprite);
 	}
 }

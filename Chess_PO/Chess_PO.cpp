@@ -9,15 +9,26 @@ void resetGame();
 
 Board* board;
 
+unsigned int windowInitSizeX = 1000;
+unsigned int windowInitSizeY = 600;
+
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode(800, 600), "Chess!");
+    sf::RenderWindow window(sf::VideoMode(windowInitSizeX, windowInitSizeY),"Chess!");
 
     initGame();
+
+    //store window size
+    unsigned int sizeX;
+    unsigned int sizeY;
 
     while (window.isOpen())
     {
         sf::Event event;
+        
+        sizeX = window.getSize().x;
+        sizeY = window.getSize().y;
+
         while (window.pollEvent(event))
         {
             if (event.type == sf::Event::Closed)
@@ -25,6 +36,12 @@ int main()
 
             if (event.type == sf::Event::Resized)
             {
+                //make sure new window size is not smaller than initial size
+                if (window.getSize().x < windowInitSizeX || window.getSize().y < windowInitSizeY)
+                {
+                    window.setSize(sf::Vector2u(sizeX, sizeY));
+                }
+
                 sf::FloatRect view(0, 0, event.size.width, event.size.height);
                 window.setView(sf::View(view));
             }
@@ -45,6 +62,7 @@ int main()
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S))
         {
+            window.setSize(sf::Vector2u(windowInitSizeX, windowInitSizeY));
             Board::printUnderAttackWhite();
         }
 
@@ -65,11 +83,11 @@ int main()
         }
 
 
+
     }
 
     return 0;
 }
-
 
 void initGame()
 {

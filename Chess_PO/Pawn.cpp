@@ -226,6 +226,22 @@ bool Pawn::promote(Coordinates c)
 				return true;
 			}
 		}
+		//check capture
+		if (c.getY() - positionOnBoard.getY() == 1 && abs(c.getX() - positionOnBoard.getX()) == 1)
+		{
+			if (Board::getPieceTypeOnGivenCoords(c) != empty)
+			{
+				int color1 = pieceTypeToColor(Board::getPieceTypeOnGivenCoords(positionOnBoard));
+				int color2 = pieceTypeToColor(Board::getPieceTypeOnGivenCoords(c));
+				if (color1 != color2)
+				{
+					if (c.getY() == 7)
+					{
+						return true;
+					}
+				}
+			}
+		}
 	}
 
 	if (type == w_pawn)
@@ -235,6 +251,22 @@ bool Pawn::promote(Coordinates c)
 			if (c.getY() == 0)
 			{
 				return true;
+			}
+		}
+		//check capture
+		if (positionOnBoard.getY() - c.getY() == 1 && abs(c.getX() - positionOnBoard.getX()) == 1)
+		{
+			if (Board::getPieceTypeOnGivenCoords(c) != empty)
+			{
+				int color1 = pieceTypeToColor(Board::getPieceTypeOnGivenCoords(positionOnBoard));
+				int color2 = pieceTypeToColor(Board::getPieceTypeOnGivenCoords(c));
+				if (color1 != color2)
+				{
+					if (c.getY() == 0)
+					{
+						return true;
+					}
+				}
 			}
 		}
 	}
