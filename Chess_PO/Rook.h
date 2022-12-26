@@ -4,8 +4,6 @@
 
 class Rook : Piece
 {
-private:
-	bool firstMove;
 
 public:
 	sf::Texture texture;

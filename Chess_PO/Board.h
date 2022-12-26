@@ -83,16 +83,20 @@ private:
 	//turn indicator 0 -white 1 - black
 	static int turn;
 
-	//check indicators
+	//check indicators:
+
 	//when kings are attacked once
+
 	static int check_white;
 	static int check_black;
 	
 	//when kings are attacked more than once
+
 	static int hard_check_white;
 	static int hard_check_black;
 
-	//to check if somebody won
+	//flags to check if somebody won (or stalemate)
+
 	static int whiteWon;
 	static int blackWon;
 	static int staleMate;
@@ -105,8 +109,10 @@ private:
 	static int whitePromotions;
 	static int blackPromotions;
 
-	//private methods
 
+
+	//PRIVATE METHODS
+	
 	//initializes pieces of both colors on board - creates new Piece objects and stores them in arrays of same type
 	void initPieces();
 
@@ -119,6 +125,12 @@ private:
 	//the function calculates the point where the piece should be drawn for each field 
 	void calculatePiecesPositions();
 
+	//draws board fields and messagebox
+	void drawBoard(sf::RenderWindow& target);
+
+
+	//STATIC PRIVATE METHODS
+	
 	//prepare game logic for the next turn
 	static void nextTurn();
 
@@ -144,9 +156,6 @@ private:
 	//performs a capture - deletes a piece on given coordinates
 	static void capture(Coordinates);
 
-	//draws board fields and messagebox
-	void drawBoard(sf::RenderWindow& target);
-
 	//utility - returns position of the field in pixels from the given logical representation of the field
 	static sf::Vector2f boardToScreenPos(int, int);
 
@@ -163,15 +172,20 @@ public:
 	Board();
 	~Board();
 
+	//PUBLIC METHODS
+
 	//initializes board - sets flags to default and initializes pieces on board
 	void init();
 
 	//called once each frame
 	void update(sf::RenderWindow&);
 
+	//set colors of board
+	void setColorsofBoard(sf::Color, sf::Color);
 
 
 
+	//PUBLIC STATIC METHODS
 
 	//nextMove simulation - checks if next move is legal - in terms of:	 capturing own piece, trying to capture nothing (when moving pawn), trying to move a piece, which was pinned to a king
 	static bool simulateNextMove(Piece*,Coordinates);
@@ -185,9 +199,6 @@ public:
 
 	//sets all values in _fieldsUnderAttact array to 0
 	static void resetFieldsUnderAttack();
-
-	//set colors of board
-	void setColorsofBoard(sf::Color, sf::Color);
 
 	//getters
 

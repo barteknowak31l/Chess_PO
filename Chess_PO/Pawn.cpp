@@ -30,13 +30,10 @@ Pawn::Pawn(int x, int y, int color,int t)
 
 	firstMove = true;
 	enPassantable = 0;
-
-	std::cout << "PawnConstructor\n";
 }
 
 Pawn::~Pawn()
 {
-	std::cout << "PawnDestructor\n";
 	return;
 }
 
@@ -47,27 +44,27 @@ bool Pawn::isMoveLegal(Coordinates c)
 	//moze ruszyc sie na bok jesli stoi tam przeciwnik - BICIE
 
 
+	//check if pawn should promote
 	if (promote(c))
 	{
-		std::cout << "PROMOCJA\n";
 		Board::pawnPromotion(positionOnBoard, c);
 		return false;
 	}
 
+	//check if a pawn should perform enPassant
 	int en = enPassant(c);
 	if (en > 0)
 	{
 		Coordinates tmp = positionOnBoard;
-		std::cout << "EN PASSANT\n";
 		switch (en)
 		{
-		case 1:
+		case 1:	//enPassant to the right
 		{
 			tmp.setX(positionOnBoard.getX() + 1);
 			Board::enPassant(this, c, tmp);
 			break;
 		}
-		case 2:
+		case 2: //enPassant to the left
 		{
 			tmp.setX(positionOnBoard.getX() - 1);
 			Board::enPassant(this, c, tmp);
@@ -77,9 +74,10 @@ bool Pawn::isMoveLegal(Coordinates c)
 
 	}
 
-
+	//try to move if its black pawn
 	if (type == b_pawn)
 	{
+		//if its first move of a pawn, additionpal +2 move should be checked
 		if (firstMove)
 		{
 
@@ -106,7 +104,6 @@ bool Pawn::isMoveLegal(Coordinates c)
 					if (color1 != color2)
 					{
 						firstMove = false;
-						//Board::capture(c);
 						return true;
 					}
 				}
@@ -144,6 +141,7 @@ bool Pawn::isMoveLegal(Coordinates c)
 	}
 
 
+	//same logic for white pawn
 	if (type == w_pawn)
 	{
 		if (firstMove)
@@ -211,14 +209,16 @@ bool Pawn::isMoveLegal(Coordinates c)
 
 	
 
-	std::cout << "INCORRECT PAWN MOVE :( enpassantable: "<<enPassantable<<std::endl;
+	//if all test have failed - move is incorrect 
 	return false;
 }
 
 bool Pawn::promote(Coordinates c)
 {
+	//logic for black panw
 	if (type == b_pawn)
 	{
+		//if a pawn moved to last field and that field is empty
 		if (c.getY() - positionOnBoard.getY() == 1 && c.getX() - positionOnBoard.getX() == 0 && Board::getPieceTypeOnGivenCoords(c) == empty)
 		{
 			if (c.getY() == 7)
@@ -226,7 +226,7 @@ bool Pawn::promote(Coordinates c)
 				return true;
 			}
 		}
-		//check capture
+		//check capture - can move to last field by capturing an enemy piece
 		if (c.getY() - positionOnBoard.getY() == 1 && abs(c.getX() - positionOnBoard.getX()) == 1)
 		{
 			if (Board::getPieceTypeOnGivenCoords(c) != empty)
@@ -244,6 +244,7 @@ bool Pawn::promote(Coordinates c)
 		}
 	}
 
+	//same logic for white pawns
 	if (type == w_pawn)
 	{
 		if (positionOnBoard.getY() - c.getY() == 1 && c.getX() - positionOnBoard.getX() == 0 && Board::getPieceTypeOnGivenCoords(c) == empty)
@@ -448,10 +449,12 @@ void Pawn::addRemainingPossibleMoves()
 int Pawn::enPassant(Coordinates c)
 {
 	Coordinates tmp;
+
+	//logic for black pawns
 	if (type == b_pawn)
 	{
-		//find out on which we try to en passant
-		//to right
+		//find out on which side we try to en passant
+		//to the right
 		if (c.getX() - positionOnBoard.getX() == 1 && c.getY() - positionOnBoard.getY() == 1)
 		{
 			//check if theres w_pawn on the right
@@ -462,12 +465,12 @@ int Pawn::enPassant(Coordinates c)
 				//check if that w_pawn is enPassantable
 				if (((Pawn*)getPieceByCoords(tmp))->getEnpassantable() == 1)
 				{
-					//EN PASSANT
+					//EN PASSANT TO RIGHT
 					return 1;
 				}
 			}
 		}
-		//to left
+		//to the left
 		if (positionOnBoard.getX() - c.getX() == 1 && c.getY() - positionOnBoard.getY() == 1)
 		{
 			//check if theres w_pawn on the left
@@ -478,7 +481,7 @@ int Pawn::enPassant(Coordinates c)
 				//check if that w_pawn is enPassantable
 				if (((Pawn*)getPieceByCoords(tmp))->getEnpassantable() == 1)
 				{
-					//EN PASSANT
+					//EN PASSANT TO THE
 					return 2;
 				}
 
@@ -487,10 +490,11 @@ int Pawn::enPassant(Coordinates c)
 
 	}
 
+	//same logic for white pawns
 	if (type == w_pawn)
 	{
 		//find out on which we try to en passant
-		//to right
+		//to the right
 		if (c.getX() - positionOnBoard.getX() == 1 && positionOnBoard.getY() - c.getY() == 1)
 		{
 			//check if theres b_pawn on the right
@@ -501,12 +505,12 @@ int Pawn::enPassant(Coordinates c)
 				//check if that b_pawn is enPassantable
 				if (((Pawn*)getPieceByCoords(tmp))->getEnpassantable() == 1)
 				{
-					//EN PASSANT
+					//EN PASSANT TO THE RIGHT
 					return 1;
 				}
 			}
 		}
-		//to left
+		//to the left
 		if (positionOnBoard.getX() - c.getX() == 1 && positionOnBoard.getY() - c.getY() == 1)
 		{
 			//check if theres b_pawn on the left
@@ -517,7 +521,7 @@ int Pawn::enPassant(Coordinates c)
 				//check if that b_pawn is enPassantable
 				if (((Pawn*)getPieceByCoords(tmp))->getEnpassantable() == 1)
 				{
-					//EN PASSANT
+					//EN PASSANT TO THE LEFT
 					return 2;
 				}
 
@@ -526,7 +530,7 @@ int Pawn::enPassant(Coordinates c)
 
 	}
 
-
+	//tests have failed - player did not try enPassant or its not legal
 
 	return 0;
 }
