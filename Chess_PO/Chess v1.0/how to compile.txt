@@ -1,0 +1,15 @@
+THIS APPLICATION WORKS UNDER WINDOWS ONLY (tested on Windows 10)
+
+Using g++:
+
+g++ -c .\source\*.cpp -I .\source\include -DSFML_STATIC
+
+g++ .\*.o -o Chess.exe -L .\lib -l:libsfml-graphics-s.a -l:libsfml-window-s.a -l:libsfml-system-s.a -l:libfreetype.a -lopengl32 -lwinmm -lgdi32
+
+del *.o
+
+
+
+Using make:
+
+make all

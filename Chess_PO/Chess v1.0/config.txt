@@ -1,0 +1,20 @@
+syntax:
+parameter:value
+
+//0 means no debug, 1 means debug
+debug:0
+
+//Color (RGB) of white field of chessboard
+white_field_R:255
+white_field_G:255
+white_field_B:255
+
+//Color (RGB) of black field of chessboard
+black_field_R:175
+black_field_G:115
+black_field_B:0
+
+//Color (RGB) of text in message box 
+message_R:221
+message_G:53
+message_B:53
