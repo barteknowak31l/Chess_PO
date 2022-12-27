@@ -35,7 +35,7 @@ void Coordinates::setY(int y)
 }
 char Coordinates::xToLetters(int x)
 {
-	return x + 17;	//offset w ASCII
+	return x + 17;	//ASCII offset
 }
 
 void Coordinates::print()

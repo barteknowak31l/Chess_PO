@@ -24,7 +24,6 @@ King::King(int x, int y, int color,int t)
 	sprite.setTexture(texture);
 	sprite.setOrigin(texture.getSize().x / 2, texture.getSize().y / 2);
 	instances.insert(this);
-	std::cout << "KingConstructor\n";
 
 	firstMove = true;
 
@@ -32,22 +31,28 @@ King::King(int x, int y, int color,int t)
 
 King::~King()
 {
-	std::cout << "KingDestructor\n";
 	return;
 }
 
 bool King::isMoveLegal(Coordinates c)
 {
-	//sprawdz czy na nowym polu nie ma naszej figury
-	//8 kombinacji pole musi byc wolne albo zajete przez przeciwnika
+	//king has 8 possible combinations of movement
+	//king has special move - castle - special conditions has to be met - it is checked in castle(Coordinates) function
+	//there can't be piece of the same color on destinated field
+	//king cannot move to field under attack - this is checked in simulation step - see Board::simulateNextMove(Piece*, Coordinates)
+
 
 	//try castle
 	int cas = castle(c);
-
+	
 	if (cas> 0 && firstMove && Board::check_white== 0 && Board::check_black ==0)
 	{
 		firstMove = false;
+
+		//pass the control to Board class to perform a castle move
 		Board::castle(this, c, cas);
+
+		//castle move was done by Board class, no further actions needed
 		return false;
 	}
 
@@ -56,57 +61,48 @@ bool King::isMoveLegal(Coordinates c)
 	int color2 = pieceTypeToColor(type);
 	if (color1 == color2)
 	{
-		std::cout << "krol probuje zbic swoja figure\n";
 		return false;
 	}
+	
+
+	//all possible combinations:
 
 	//1. up
 	if (positionOnBoard.getX() == c.getX() && positionOnBoard.getY() - c.getY() == 1 && Board::getFieldUnderAttack(c, !pieceTypeToColor(type)) == 0)
 	{
-		std::cout << "king up move\n";
-		//if (Board::getPieceTypeOnGivenCoords(c) != empty)
-			//Board::capture(c);
 		if (firstMove)
 		{
 			firstMove = false;
 		}
+
 		return true;
 	}
 
 	//2. up  - right
 	if (c.getX() - positionOnBoard.getX() == 1 && positionOnBoard.getY() - c.getY() == 1 && Board::getFieldUnderAttack(c, !pieceTypeToColor(type)) == 0)
 	{
-		std::cout << "king up-right move\n";
-		//if (Board::getPieceTypeOnGivenCoords(c) != empty)
-			//Board::capture(c);
-
 		if (firstMove)
 		{
 			firstMove = false;
 		}
+
 		return true;
 	}
 
 	//3. right
 	if (c.getX() - positionOnBoard.getX() == 1 && positionOnBoard.getY() == c.getY() && Board::getFieldUnderAttack(c, !pieceTypeToColor(type)) == 0)
 	{
-		std::cout << "king right move\n";
-		//if (Board::getPieceTypeOnGivenCoords(c) != empty)
-			//Board::capture(c);
-
 		if (firstMove)
 		{
 			firstMove = false;
 		}
+
 		return true;
 	}
 
 	//4. down  - right
 	if (c.getX() - positionOnBoard.getX() == 1 && c.getY() - positionOnBoard.getY() == 1 && Board::getFieldUnderAttack(c, !pieceTypeToColor(type)) == 0)
 	{
-		std::cout << "king down-right move\n";
-		//if (Board::getPieceTypeOnGivenCoords(c) != empty)
-			//Board::capture(c);
 		if (firstMove)
 		{
 			firstMove = false;
@@ -118,9 +114,6 @@ bool King::isMoveLegal(Coordinates c)
 	//5. down
 	if (c.getX() == positionOnBoard.getX() && c.getY() - positionOnBoard.getY() == 1 && Board::getFieldUnderAttack(c, !pieceTypeToColor(type)) == 0)
 	{
-		std::cout << "king down move\n";
-		//if (Board::getPieceTypeOnGivenCoords(c) != empty)
-			//Board::capture(c);
 		if (firstMove)
 		{
 			firstMove = false;
@@ -132,9 +125,6 @@ bool King::isMoveLegal(Coordinates c)
 	//6. down  - left
 	if (positionOnBoard.getX() - c.getX() == 1 && c.getY() - positionOnBoard.getY() == 1 && Board::getFieldUnderAttack(c, !pieceTypeToColor(type)) == 0)
 	{
-		std::cout << "king down-left move\n";
-		//if (Board::getPieceTypeOnGivenCoords(c) != empty)
-			//Board::capture(c);
 		if (firstMove)
 		{
 			firstMove = false;
@@ -146,10 +136,6 @@ bool King::isMoveLegal(Coordinates c)
 	//7. left
 	if (positionOnBoard.getX() - c.getX() == 1 && c.getY() == positionOnBoard.getY() == 1 && Board::getFieldUnderAttack(c, !pieceTypeToColor(type)) == 0)
 	{
-		std::cout << "king left move\n";
-		//if (Board::getPieceTypeOnGivenCoords(c) != empty)
-			//Board::capture(c);
-
 		if (firstMove)
 		{
 			firstMove = false;
@@ -161,23 +147,13 @@ bool King::isMoveLegal(Coordinates c)
 	//8. up  - left
 	if (positionOnBoard.getX() - c.getX() == 1 && positionOnBoard.getY() - c.getY() == 1 && Board::getFieldUnderAttack(c, !pieceTypeToColor(type)) == 0)
 	{
-		std::cout << "king up-left move\n";
-		//if (Board::getPieceTypeOnGivenCoords(c) != empty)
-			//Board::capture(c);
-
 		if (firstMove)
 		{
 			firstMove = false;
 		}
 
-
 		return true;
 	}
-
-
-
-
-
 
 	//not legal move
 	return false;
@@ -185,9 +161,8 @@ bool King::isMoveLegal(Coordinates c)
 
 void King::findFieldsUnderAttack()
 {
+	//check all 8 combinations and check if that field is still on board
 
-
-	//8 kombinacji + sprawdzenie czy nie wychodzimy poza szachownice
 	Coordinates tmp = positionOnBoard;
 	if (capturedInSimulation)
 	{
@@ -273,6 +248,8 @@ void King::findFieldsUnderAttack()
 
 void King::findAllPossibleMoves()
 {
+	//try to move a king each possible combination that is on the board. If it finds another piece: if it's colors piece - dont add to possible moves, else do add.
+
 	clearSetofCoords();
 	Coordinates tmp = positionOnBoard;
 
@@ -433,7 +410,18 @@ void King::findAllPossibleMoves()
 
 int King::castle(Coordinates c)
 {
-	//sprawdz czy c to koordynaty wiezy naszego koloru, sprawdz czy wieza nie byla ruszana, sprawdz czy na drodze nic nie stoi, sprawdz czy finalowe pole jest atakowane
+
+	//check if c are the coordinates of the same color as the king
+	//check if king and chosen rook was not moved arleady
+	//check if there are no other pieces blocking movement of the king and the rook
+	//check if king's destinated field is not under attack
+	//if all those conditions are met - return a castle type:
+	//1 - white left rook (white long castle)
+	//2 - white right rook (white short castle)
+	//3 - black left rook (black long castle)
+	//4 - black right rook (black short castle)
+	//return 0 otherwise
+
 
 	Coordinates tmp1;
 	Coordinates tmp2;

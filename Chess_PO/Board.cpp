@@ -203,7 +203,7 @@ void Board::initInfoText()
 	infoText.setString("White to move\n");
 	infoText.setCharacterSize(24);
 	infoText.setPosition(sf::Vector2f(630, 200));
-	infoText.setFillColor(sf::Color::White);
+	infoText.setFillColor(textColor);
 	infoText.setStyle(sf::Text::Bold);
 	infoText.setOrigin(sf::Vector2f(infoText.getGlobalBounds().width / 2, infoText.getGlobalBounds().height / 2));
 
@@ -335,6 +335,8 @@ int* Board::screenToBoardPos(sf::Vector2f mousePos)
 			}
 		}
 	}
+
+	return  NULL;
 }
 
 void Board::calculatePiecesPositions()
@@ -349,11 +351,6 @@ void Board::calculatePiecesPositions()
 	}
 }
 
-void Board::setColorsofBoard(sf::Color c1, sf::Color c2)
-{
-	color1 = c1;
-	color2 = c2;
-}
 
 void Board::move(Piece* p, Coordinates c)
 {
@@ -542,7 +539,7 @@ bool Board::simulateNextMove(Piece* p, Coordinates c2)
 		}
 	}
 
-	//change coordinates in object p
+	//change coordinates in piece object p
 	p->setPositionOnboard(c2);
 
 	//if theres a piece on coords c2, try to perform a capture
@@ -595,7 +592,7 @@ bool Board::simulateNextMove(Piece* p, Coordinates c2)
 			old->unsetCapturedInSim();
 		}
 
-		//restore logical position stored in object
+		//restore logical position stored in piece object
 		p->setPositionOnboard(c1);
 
 		//restore fieldsUnderAttack
@@ -627,7 +624,7 @@ bool Board::simulateNextMove(Piece* p, Coordinates c2)
 			old->unsetCapturedInSim();
 		}
 
-		//restore logical position stored in object
+		//restore logical position stored in piece object
 		p->setPositionOnboard(c1);
 
 		//restore fieldsUnderAttack
@@ -658,7 +655,7 @@ bool Board::simulateNextMove(Piece* p, Coordinates c2)
 		old->unsetCapturedInSim();
 	}
 
-	//restore logical position stored in object
+	//restore logical position stored in piece object
 	p->setPositionOnboard(c1);
 	
 	//restore fieldsUnderAttack
@@ -780,7 +777,6 @@ bool Board::isMate(int color)
 					//if there is a possible move, then theres no checkmate
 					if (simulateNextMove(p, *c))
 					{
-						std::cout << "Znaleziono ruch bialego: " << p->getPositionOnBoard().getX() << " " << p->getPositionOnBoard().getY() << " -> " << c->getX() << " " << c->getY() << std::endl;
 						return false;
 					}
 				}
@@ -804,7 +800,6 @@ bool Board::isMate(int color)
 					//if there is a possible move, then theres no checkmate
 					if (simulateNextMove(p, *c))
 					{
-						std::cout << "Znaleziono ruch czarnego: " << p->getPositionOnBoard().getX() << " " << p->getPositionOnBoard().getY() << " -> " << c->getX() << " " << c->getY() << std::endl;
 						return false;
 					}
 				}
@@ -950,6 +945,17 @@ void Board::pawnPromotion(Coordinates c_pawn, Coordinates c_new)
 }
 
 //setters
+void Board::setColorsofBoard(sf::Color c1, sf::Color c2)
+{
+	color1 = c1;
+	color2 = c2;
+}
+
+void Board::setMessageTextColor(sf::Color c)
+{
+	textColor = c;
+}
+
 void Board::setFieldUnderAttack(Coordinates c,int color,int type)
 {
 	if (color == 0)

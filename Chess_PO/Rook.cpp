@@ -36,19 +36,17 @@ Rook::Rook(int x, int y, int color,int t)
 
 Rook::~Rook()
 {
-	std::cout << "RookDestructor\n";
 	return;
 }
 
 bool Rook::isMoveLegal(Coordinates c)
 {
-	//ruch w pionie/poziomie -> rozne x i te same y i analogicznie
-	//nie moze miec nic na drodze
-	//jesli powyzsze warunki sa spelnione to
-	//jesli na c cos stoi - bicie, else zwykly rych
+	//can move horizontally or vertically
+	//can't move through other pieces
+	//if there's an enemy piece on destinated field, it can be captured
+
 
 	//check if vertical or horizontal move
-
 	if ( (positionOnBoard.getX() != c.getX() && positionOnBoard.getY() == c.getY()) || (positionOnBoard.getY() != c.getY() && positionOnBoard.getX() == c.getX()))
 	{
 
@@ -59,15 +57,16 @@ bool Rook::isMoveLegal(Coordinates c)
 		{
 			tmp.setY(positionOnBoard.getY());
 
-			int dir = c.getX() - positionOnBoard.getX(); // < 0 means piece moves left
+			int dir = c.getX() - positionOnBoard.getX(); // dir > 0 means piece moves right
 
 			if (dir > 0)
 			{
 				//piece moves right
 				for (int i = positionOnBoard.getX(); i < c.getX(); i++)
 				{
-					std::cout << i << std::endl;
 					tmp.setX(i);
+
+					//if there is a colliding piece
 					if (Board::getPieceTypeOnGivenCoords(tmp) != empty && tmp != positionOnBoard)
 					{
 						return false;
@@ -80,8 +79,9 @@ bool Rook::isMoveLegal(Coordinates c)
 				//piece moves left
 				for (int i = positionOnBoard.getX(); i > c.getX(); i--)
 				{
-					std::cout << i << std::endl;
 					tmp.setX(i);
+
+					//if there is a colliding piece
 					if (Board::getPieceTypeOnGivenCoords(tmp) != empty && tmp != positionOnBoard && i != positionOnBoard.getX() )
 					{
 						return false;
@@ -96,7 +96,7 @@ bool Rook::isMoveLegal(Coordinates c)
 		{
 			tmp.setX(positionOnBoard.getX());
 
-			int dir = c.getY() - positionOnBoard.getY(); // < 0 means piece moves up
+			int dir = c.getY() - positionOnBoard.getY(); // dir > 0 means piece moves down
 
 			if (dir > 0)
 			{
@@ -104,7 +104,8 @@ bool Rook::isMoveLegal(Coordinates c)
 				for (int i = positionOnBoard.getY(); i < c.getY(); i++)
 				{
 					tmp.setY(i);
-					std::cout << i << std::endl;
+			
+					//if there is a colliding piece
 					if (Board::getPieceTypeOnGivenCoords(tmp) != empty && tmp != positionOnBoard && i != c.getY())
 					{
 						return false;
@@ -118,7 +119,8 @@ bool Rook::isMoveLegal(Coordinates c)
 				for (int i = positionOnBoard.getY(); i > c.getY(); i--)
 				{
 					tmp.setY(i);
-					std::cout << i << std::endl;
+					
+					//if there is a colliding piece
 					if (Board::getPieceTypeOnGivenCoords(tmp) != empty && tmp != positionOnBoard && i != positionOnBoard.getY())
 					{
 						return false;
@@ -131,28 +133,19 @@ bool Rook::isMoveLegal(Coordinates c)
 		//check for capture
 		if (Board::getPieceTypeOnGivenCoords(c) != empty)
 		{
-			//sprawdz czy bijemy figure przeciwnego koloru
+			//check if if it's an enemy piece
 			int color1 = pieceTypeToColor(Board::getPieceTypeOnGivenCoords(positionOnBoard));
 			int color2 = pieceTypeToColor(Board::getPieceTypeOnGivenCoords(c));
-			//capture
-			if (color1 != color2)
+			
+			//trying to capture own piece - incorrect
+			if (color1 == color2)
 			{
-				std::cout << "Rook captured a piece!\n";
-				//Board::capture(c);
-				
-			}
-			else
-			{
-				std::cout << "trying to capture your own piece\n";
 				return false;
 			}
 		}
 
 
-		//correct move (not capture)
-
-		//check for capture
-		//for now, considering all moves the same 
+		//correct move 
 
 		if (firstMove)
 		{
@@ -164,15 +157,14 @@ bool Rook::isMoveLegal(Coordinates c)
 
 	}
 
-
-
+	//not horizontal or vertical move
 	return false;
 }
 
 void Rook::findFieldsUnderAttack()
 {
-	//sprawdz kazdy kierunek az do wyjscia poza plansza lub napotkania przeszkody i ustaw wszystkie mijane pola na under_attack, wlacznie z polem przeszkody
-
+	//iterate through each direction horizontally and vertically until piece goes off board or finds another piece, set those fields as under attack (including field with another piece
+	//if found).
 
 	Coordinates tmp = positionOnBoard;
 	if (capturedInSimulation)
@@ -245,6 +237,9 @@ void Rook::findFieldsUnderAttack()
 
 void Rook::findAllPossibleMoves()
 {
+
+	//try to move a rook each direction horizontally and vertically until it goes off board or finds another piece: if it's colors piece - dont add to possible moves, else do add.
+
 	clearSetofCoords();
 	Coordinates tmp;
 

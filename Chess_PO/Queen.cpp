@@ -29,26 +29,28 @@ Queen::Queen(int x, int y, int color,int t)
 
 	instances.insert(this);
 
-	std::cout << "QueenConstructor\n";
 }
 
 Queen::~Queen()
 {
-	std::cout << "QueenDestructor\n";
 	return;
 }
 
 bool Queen::isMoveLegal(Coordinates c)
 {
+	//Queen can perform moves as rook and bishop do:
+
 	return diagonalMove(c) || horizontalVerticalMove(c);
 }
 
 
 bool Queen::diagonalMove(Coordinates c)
 {
-	//sprawdz czy na polu docelowym nie ma figury tego samego koloru
-	//sprawdz czy nowe pole spelnia warunek abs(dx) == abs(dy) - ruch na ukos
-	//sprawdz czy nie ma przeszkod
+	//bishop can move diagonally
+	//can't move through other pieces
+	//function checks of following condition is met: abs(dx) == abs(dy) - means if the difference of horizontal and vertical shift (i.e newPosition.x - currentPosition.x) are equal - 
+	//then the move is a diagonal move
+	//also need to check if there isn't a piece of the same color on destinated field
 
 
 	int color1 = pieceTypeToColor(Board::getPieceTypeOnGivenCoords(c));
@@ -56,7 +58,6 @@ bool Queen::diagonalMove(Coordinates c)
 
 	if (color1 == color2)
 	{
-		std::cout << "niepoprawny ruch albo proba zbicia wlasniej figury\n";
 		return false;
 	}
 
@@ -71,14 +72,11 @@ bool Queen::diagonalMove(Coordinates c)
 		{
 			for (int i = 1; i < c.getX() - positionOnBoard.getX(); i++)
 			{
-				//std::cout << i << std::endl;
 				tmp.setX(tmp.getX() + 1);
 				tmp.setY(tmp.getY() - 1);
-				std::cout << tmp.getX() << " " << tmp.getY() << std::endl;
 
 				if (Board::getPieceTypeOnGivenCoords(tmp) != empty)
 				{
-					std::cout << "queen up-right collision\n";
 					return false;
 				}
 
@@ -92,10 +90,9 @@ bool Queen::diagonalMove(Coordinates c)
 			{
 				tmp.setX(tmp.getX() + 1);
 				tmp.setY(tmp.getY() + 1);
-				std::cout << tmp.getX() << " " << tmp.getY() << std::endl;
+
 				if (Board::getPieceTypeOnGivenCoords(tmp) != empty)
 				{
-					std::cout << "queen down-right collision\n";
 					return false;
 				}
 
@@ -107,14 +104,11 @@ bool Queen::diagonalMove(Coordinates c)
 		{
 			for (int i = 1; i < c.getY() - positionOnBoard.getY(); i++)
 			{
-				//std::cout << i << std::endl;
 				tmp.setX(tmp.getX() - 1);
 				tmp.setY(tmp.getY() + 1);
-				std::cout << tmp.getX() << " " << tmp.getY() << std::endl;
 
 				if (Board::getPieceTypeOnGivenCoords(tmp) != empty)
 				{
-					std::cout << "queen down-left collision\n";
 					return false;
 				}
 
@@ -126,40 +120,33 @@ bool Queen::diagonalMove(Coordinates c)
 		{
 			for (int i = 1; i < positionOnBoard.getY() - c.getY(); i++)
 			{
-				//std::cout << i << std::endl;
 				tmp.setX(tmp.getX() - 1);
 				tmp.setY(tmp.getY() - 1);
-				std::cout << tmp.getX() << " " << tmp.getY() << std::endl;
 
 				if (Board::getPieceTypeOnGivenCoords(tmp) != empty)
 				{
-					std::cout << "queen up-left collision\n";
 					return false;
 				}
 
 			}
 		}
 
-		//capture
-		//if (Board::getPieceTypeOnGivenCoords(c) != empty)
-			//Board::capture(c);
-
+		//correct move
 		return true;
 	}
 
-
+	//not a diagonal move
 	return false;
 }
 
 bool Queen::horizontalVerticalMove(Coordinates c)
 {
-	//ruch w pionie/poziomie -> rozne x i te same y i analogicznie
-	//nie moze miec nic na drodze
-	//jesli powyzsze warunki sa spelnione to
-	//jesli na c cos stoi - bicie, else zwykly rych
+	//can move horizontally or vertically
+	//can't move through other pieces
+	//if there's an enemy piece on destinated field, it can be captured
+
 
 	//check if vertical or horizontal move
-
 	if ((positionOnBoard.getX() != c.getX() && positionOnBoard.getY() == c.getY()) || (positionOnBoard.getY() != c.getY() && positionOnBoard.getX() == c.getX()))
 	{
 
@@ -170,15 +157,16 @@ bool Queen::horizontalVerticalMove(Coordinates c)
 		{
 			tmp.setY(positionOnBoard.getY());
 
-			int dir = c.getX() - positionOnBoard.getX(); // < 0 means piece moves left
+			int dir = c.getX() - positionOnBoard.getX(); // dir > 0 means piece moves right
 
 			if (dir > 0)
 			{
 				//piece moves right
 				for (int i = positionOnBoard.getX(); i < c.getX(); i++)
 				{
-					std::cout << i << std::endl;
 					tmp.setX(i);
+
+					//if there is a colliding piece
 					if (Board::getPieceTypeOnGivenCoords(tmp) != empty && tmp != positionOnBoard)
 					{
 						return false;
@@ -191,8 +179,9 @@ bool Queen::horizontalVerticalMove(Coordinates c)
 				//piece moves left
 				for (int i = positionOnBoard.getX(); i > c.getX(); i--)
 				{
-					std::cout << i << std::endl;
 					tmp.setX(i);
+
+					//if there is a colliding piece
 					if (Board::getPieceTypeOnGivenCoords(tmp) != empty && tmp != positionOnBoard && i != positionOnBoard.getX())
 					{
 						return false;
@@ -207,7 +196,7 @@ bool Queen::horizontalVerticalMove(Coordinates c)
 		{
 			tmp.setX(positionOnBoard.getX());
 
-			int dir = c.getY() - positionOnBoard.getY(); // < 0 means piece moves up
+			int dir = c.getY() - positionOnBoard.getY(); // dir > 0 means piece moves down
 
 			if (dir > 0)
 			{
@@ -215,7 +204,8 @@ bool Queen::horizontalVerticalMove(Coordinates c)
 				for (int i = positionOnBoard.getY(); i < c.getY(); i++)
 				{
 					tmp.setY(i);
-					std::cout << i << std::endl;
+
+					//if there is a colliding piece
 					if (Board::getPieceTypeOnGivenCoords(tmp) != empty && tmp != positionOnBoard && i != c.getY())
 					{
 						return false;
@@ -229,7 +219,8 @@ bool Queen::horizontalVerticalMove(Coordinates c)
 				for (int i = positionOnBoard.getY(); i > c.getY(); i--)
 				{
 					tmp.setY(i);
-					std::cout << i << std::endl;
+
+					//if there is a colliding piece
 					if (Board::getPieceTypeOnGivenCoords(tmp) != empty && tmp != positionOnBoard && i != positionOnBoard.getY())
 					{
 						return false;
@@ -242,43 +233,37 @@ bool Queen::horizontalVerticalMove(Coordinates c)
 		//check for capture
 		if (Board::getPieceTypeOnGivenCoords(c) != empty)
 		{
-			//sprawdz czy bijemy figure przeciwnego koloru
+			//check if if it's an enemy piece
 			int color1 = pieceTypeToColor(Board::getPieceTypeOnGivenCoords(positionOnBoard));
 			int color2 = pieceTypeToColor(Board::getPieceTypeOnGivenCoords(c));
-			//capture
-			if (color1 != color2)
+			
+			//trying to capture own piece - incorrect
+			if (color1 == color2)
 			{
-				std::cout << "Queen captured a piece!\n";
-				//Board::capture(c);
-
-			}
-			else
-			{
-				std::cout << "trying to capture your own piece\n";
 				return false;
 			}
 		}
 
 
-		//correct move (not capture)
+		//correct move
 		return true;
 
 
 	}
 
 
-
+	//not horizontal or vertical move
 	return false;
 }
 
 void Queen::findFieldsUnderAttack()
 {
+	//Queen can perform moves as rook and bishop do:
+
 	if (capturedInSimulation)
 	{
 		return;
 	}
-
-
 
 	diagonalUnderAttack();
 	horizontalVerticalUnderAttack();
@@ -287,7 +272,8 @@ void Queen::findFieldsUnderAttack()
 void Queen::diagonalUnderAttack()
 {
 
-	//sprawdzaj w 4 kierunkach az do wyjscia z planszy albo napotkania przeszkody
+	//check all fields on diagonals until a piece is found or went off the board
+
 	Coordinates tmp = positionOnBoard;
 	int i = 1;
 
@@ -354,9 +340,11 @@ void Queen::diagonalUnderAttack()
 			break;
 	}
 }
+
 void Queen::horizontalVerticalUnderAttack()
 {
-	//sprawdz kazdy kierunek az do wyjscia poza plansza lub napotkania przeszkody i ustaw wszystkie mijane pola na under_attack, wlacznie z polem przeszkody
+	//iterate through each direction horizontally and vertically until piece goes off board or finds another piece, set those fields as under attack (including field with another piece
+	//if found).
 
 	Coordinates tmp = positionOnBoard;
 
@@ -427,6 +415,8 @@ void Queen::horizontalVerticalUnderAttack()
 
 void Queen::findAllPossibleMoves()
 {
+	//Queen can perform moves as rook and bishop do:
+
 	clearSetofCoords();
 	bishopMoves();
 	rookMoves();
@@ -434,6 +424,8 @@ void Queen::findAllPossibleMoves()
 
 void Queen::bishopMoves()
 {
+	//try to move a bishop each of its diagonals until it goes off board or finds another piece: if it's colors piece - dont add to possible moves, else do add.
+
 	Coordinates tmp = positionOnBoard;
 
 	int i = 1;
@@ -540,6 +532,8 @@ void Queen::bishopMoves()
 
 void Queen::rookMoves()
 {
+	//try to move a rook each direction horizontally and vertically until it goes off board or finds another piece: if it's colors piece - dont add to possible moves, else do add.
+
 	Coordinates tmp;
 
 	//up

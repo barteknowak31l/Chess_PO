@@ -26,30 +26,28 @@ Bishop::Bishop(int x, int y, int color,int t)
 	sprite.setTexture(texture);
 	sprite.setOrigin(texture.getSize().x / 2, texture.getSize().y / 2);
 	instances.insert(this);
-	std::cout << "BishopConstructor\n";
 }
 
 Bishop::~Bishop()
 {
-	std::cout << "BishopDestructor\n";
 	return;
 }
 
 bool Bishop::isMoveLegal(Coordinates c)
 {
-	//sprawdz czy na polu docelowym nie ma figury tego samego koloru
-	//sprawdz czy nowe pole spelnia warunek abs(dx) == abs(dy) - ruch na ukos
-	//sprawdz czy nie ma przeszkod
-	std::cout << "POSITION ON BOARD: " << positionOnBoard.getX() << " " << positionOnBoard.getY() << std::endl;
-	std::cout << "c: " << c.getX() << " " << c.getY() << std::endl;
+
+	//bishop can move diagonally
+	//can't move through other pieces
+	//function checks of following condition is met: abs(dx) == abs(dy) - means if the difference of horizontal and vertical shift (i.e newPosition.x - currentPosition.x) are equal - 
+	//then the move is a diagonal move
+	//also need to check if there isn't a piece of the same color on destinated field
+
 
 
 	int color1 = pieceTypeToColor(Board::getPieceTypeOnGivenCoords(c));
 	int color2 = pieceTypeToColor(type);
-
 	if (color1 == color2)
 	{
-		std::cout << "niepoprawny ruch albo proba zbicia wlasniej figury\n";
 		return false;
 	}
 
@@ -64,14 +62,11 @@ bool Bishop::isMoveLegal(Coordinates c)
 		{
 			for (int i = 1; i < c.getX() - positionOnBoard.getX(); i++)
 			{
-				//std::cout << i << std::endl;
 				tmp.setX(tmp.getX() + 1);
 				tmp.setY(tmp.getY() - 1);
-				std::cout << tmp.getX() << " " << tmp.getY()<< std::endl;
 
 				if (Board::getPieceTypeOnGivenCoords(tmp) != empty)
 				{
-					std::cout << "bishop up-right collision\n";
 					return false;
 				}
 
@@ -85,10 +80,8 @@ bool Bishop::isMoveLegal(Coordinates c)
 			{
 				tmp.setX(tmp.getX() + 1);
 				tmp.setY(tmp.getY() + 1);
-				std::cout << tmp.getX() << " " << tmp.getY() << std::endl;
 				if (Board::getPieceTypeOnGivenCoords(tmp) != empty)
 				{
-					std::cout << "bishop down-right collision\n";
 					return false;
 				}
 
@@ -100,14 +93,11 @@ bool Bishop::isMoveLegal(Coordinates c)
 		{
 			for (int i = 1; i < c.getY() - positionOnBoard.getY(); i++)
 			{
-				//std::cout << i << std::endl;
 				tmp.setX(tmp.getX() - 1);
 				tmp.setY(tmp.getY() + 1);
-				std::cout << tmp.getX() << " " << tmp.getY() << std::endl;
 
 				if (Board::getPieceTypeOnGivenCoords(tmp) != empty)
 				{
-					std::cout << "bishop down-left collision\n";
 					return false;
 				}
 
@@ -119,35 +109,32 @@ bool Bishop::isMoveLegal(Coordinates c)
 		{
 			for (int i = 1; i < positionOnBoard.getY() - c.getY(); i++)
 			{
-				//std::cout << i << std::endl;
 				tmp.setX(tmp.getX() - 1);
 				tmp.setY(tmp.getY() - 1);
-				std::cout << tmp.getX() << " " << tmp.getY() << std::endl;
 
 				if (Board::getPieceTypeOnGivenCoords(tmp) != empty)
 				{
-					std::cout << "bishop up-left collision\n";
 					return false;
 				}
 
 			}
 		}
 
-		//capture
-		//if (Board::getPieceTypeOnGivenCoords(c) != empty)
-			//Board::capture(c);
 
+		//correct move
 		return true;
 	}
 
-
+	//not a diagonal move
 	return false;
 }
 
 void Bishop::findFieldsUnderAttack()
 {
 
-	//sprawdzaj w 4 kierunkach az do wyjscia z planszy albo napotkania przeszkody
+	//check all fields on diagonals until a piece is found or went off the board
+
+
 	Coordinates tmp = positionOnBoard;
 	if (capturedInSimulation)
 	{
@@ -222,6 +209,8 @@ void Bishop::findFieldsUnderAttack()
 
 void Bishop::findAllPossibleMoves()
 {
+	//try to move a bishop each of its diagonals until it goes off board or finds another piece: if it's colors piece - dont add to possible moves, else do add.
+
 	clearSetofCoords();
 
 	Coordinates tmp = positionOnBoard;

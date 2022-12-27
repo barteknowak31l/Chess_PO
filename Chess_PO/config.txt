@@ -1,0 +1,16 @@
+syntax:
+parameter:value
+
+debug:0
+
+white_field_R:255
+white_field_G:255
+white_field_B:255
+
+black_field_R:175
+black_field_G:115
+black_field_B:0
+
+message_R:221
+message_G:53
+message_B:53

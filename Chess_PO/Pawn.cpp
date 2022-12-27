@@ -39,9 +39,13 @@ Pawn::~Pawn()
 
 bool Pawn::isMoveLegal(Coordinates c)
 {
-	//pierwszy ruch moze byc o dwa pola -sprawdz czy ruch nr1
-	//moze ruszyc sie tylko do przodu i  tylko jesli przed nim nic nie stoi
-	//moze ruszyc sie na bok jesli stoi tam przeciwnik - BICIE
+
+	//pawn can move only upwards and only if nothing is blocking its way
+	//first move can be +2 move
+	//it can capture diagonally within one square in front of it 
+	//special move - enPassant - can capture a pawn that last move was +2 move by capturing a field behind that pawn
+	//special move - promotion - if a pawn reaches last field on opposite side of board, it turns into a queen
+
 
 
 	//check if pawn should promote
@@ -278,7 +282,7 @@ bool Pawn::promote(Coordinates c)
 
 void Pawn::findFieldsUnderAttack()
 {
-
+	
 
 	Coordinates tmp = positionOnBoard;
 	
@@ -534,7 +538,6 @@ int Pawn::enPassant(Coordinates c)
 
 	return 0;
 }
-
 
 //getters
 int Pawn::getEnpassantable()

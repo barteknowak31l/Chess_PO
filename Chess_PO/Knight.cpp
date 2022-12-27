@@ -24,22 +24,19 @@ Knight::Knight(int x, int y, int color,int t)
 	sprite.setTexture(texture);
 	sprite.setOrigin(texture.getSize().x / 2, texture.getSize().y / 2);
 	instances.insert(this);
-	std::cout << "KnightConstructor\n";
 }
 
 Knight::~Knight()
 {
-	std::cout << "KnightDestructor\n";
 	return;
 }
 
 bool Knight::isMoveLegal(Coordinates c)
 {
-	//sprawdz czy na c nie stoi nasza figura
-	//sprawdz wszystkie 8 kombinacji
+	//knight has 8 possible moves
+	// can move only if there's no piece or enemy piece on destinated field
 
 	//check if theres none of our pieces on c
-
 	int color1 = pieceTypeToColor(Board::getPieceTypeOnGivenCoords(positionOnBoard));
 	int color2 = pieceTypeToColor(Board::getPieceTypeOnGivenCoords(c));
 	if (color1 == color2)
@@ -47,91 +44,67 @@ bool Knight::isMoveLegal(Coordinates c)
 		return false;
 	}
 
+	//all combinations of moves:
 
 	//1. |'
 	if (positionOnBoard.getY() - c.getY() == 2 && c.getX() - positionOnBoard.getX() == 1)
 	{
-		//if (Board::getPieceTypeOnGivenCoords(c) != empty)
-			//Board::capture(c);
-
 		return true;
 	}
 
 	//2. __-
 	if (positionOnBoard.getY() - c.getY() == 1 && c.getX() - positionOnBoard.getX() == 2)
 	{
-		//if (Board::getPieceTypeOnGivenCoords(c) != empty)
-			//Board::capture(c);
-
 		return true;
 	}
 
 	//3. --_
 	if (c.getY() - positionOnBoard.getY() == 1 && c.getX() - positionOnBoard.getX() == 2)
 	{
-		//if (Board::getPieceTypeOnGivenCoords(c) != empty)
-			//Board::capture(c);
-
 		return true;
 	}
 
 	//4. |_
 	if (c.getY() - positionOnBoard.getY() == 2 && c.getX() - positionOnBoard.getX() == 1)
 	{
-		//if (Board::getPieceTypeOnGivenCoords(c) != empty)
-			//Board::capture(c);
-
 		return true;
 	}
 
 	//5. _|
 	if (c.getY() - positionOnBoard.getY() == 2 && positionOnBoard.getX() - c.getX() == 1)
 	{
-		//if (Board::getPieceTypeOnGivenCoords(c) != empty)
-			//Board::capture(c);
-
 		return true;
 	}
 	
 	//6. _--
 	if (c.getY() - positionOnBoard.getY() == 1 && positionOnBoard.getX() - c.getX() == 2)
 	{
-		//if (Board::getPieceTypeOnGivenCoords(c) != empty)
-			//Board::capture(c);
-
 		return true;
 	}
 
 	//7. -__
 	if (positionOnBoard.getY() - c.getY() == 1 && positionOnBoard.getX() - c.getX() == 2)
 	{
-		//if (Board::getPieceTypeOnGivenCoords(c) != empty)
-			//Board::capture(c);
-
 		return true;
 	}
 
 	//8. '|
 	if (positionOnBoard.getY() - c.getY() == 2 && positionOnBoard.getX() - c.getX() == 1)
 	{
-		//if (Board::getPieceTypeOnGivenCoords(c) != empty)
-			//Board::capture(c);
-
 		return true;
 	}
 
 
 
 
-
+	//tried to do other move than allowed
 	return false;
 }
 
 void Knight::findFieldsUnderAttack()
 {
 
-
-	//8 kombinacji + sprawdzenie czy dana kombinacja miesci sie na szachownicy
+	//checks all 8 combinations if they are still on the board - if so, add these coordinates to fieldsUnderAttack
 	Coordinates tmp = positionOnBoard;
 	if (capturedInSimulation)
 	{
@@ -211,6 +184,8 @@ void Knight::findFieldsUnderAttack()
 
 void Knight::findAllPossibleMoves()
 {
+	//try to move knight to each of it's possible move combinations that are still on board. If it finds another piece: if it's colors piece - dont add to possible moves, else do add.
+
 	clearSetofCoords();
 	Coordinates tmp = positionOnBoard;
 
