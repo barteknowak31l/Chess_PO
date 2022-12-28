@@ -8,11 +8,11 @@ There is possible configuration of some propeties of the game - it can be done b
 
 Classes used in this project:
 
--Board
+-Board - includes most of the game logic
 
--Coordinates
+-Coordinates - representation of positions on the chessboard
 
--Piece (abstract)
+-Piece - abstract class for all chess pieces, each of them implements piece movement according to chess rules.
 
 and the following classes inherits from the Piece class:
 
@@ -28,17 +28,20 @@ and the following classes inherits from the Piece class:
 
 -King
 
+More detailed description of classes and their implementations can be found in source files. 
 
 How to compile:
 This application works on Windows only (tested on Windows 10)
 There are two ways to compile this project:
 
 using g++ manually, by typing following commands in shell opened in project folder:
+
 g++ -c .\source\*.cpp -I .\source\include -DSFML_STATIC
 g++ .\*.o -o Chess.exe -L .\lib -l:libsfml-graphics-s.a -l:libsfml-window-s.a -l:libsfml-system-s.a -l:libfreetype.a -lopengl32 -lwinmm -lgdi32
 del *.o
 
-or using make command in shell opened in project folder:
+or using make command in shell opened in project folder (make sure there's a makefile in project folder):
+
 make all
 
 
