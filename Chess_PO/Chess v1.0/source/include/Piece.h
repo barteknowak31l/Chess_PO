@@ -2,7 +2,7 @@
 #define _Piece
 
 #include "coordinates.h"
-#include <SFML\Graphics.hpp>
+#include "SFML\Graphics.hpp"
 #include <set>
 #include "utils.h"
 

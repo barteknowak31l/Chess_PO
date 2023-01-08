@@ -83,6 +83,7 @@ void Board::init()
 	//initialize messagebox
 	initInfoText();
 
+	//init logical board
 	_b[0][0] = b_rook;
 	_b[0][1] = b_knight;
 	_b[0][2] = b_bishop;
@@ -261,12 +262,14 @@ void Board::drawBoard(sf::RenderWindow& target)
 	float y = target.getSize().y;
 
 	float textSize = std::min(x, y);
-	float textSizeScale = 20;
+	float textSizeScale = 25;
 	float size = std::min(x, y) / 8;
 
 
+	float textbox_size = ( (target.getSize().x - (size * 8)) / 400);
+
 	//dipslay infoText
-	infoText.setCharacterSize(textSize / textSizeScale);
+	infoText.setCharacterSize(textbox_size  * textSizeScale);
 	infoText.setOrigin(sf::Vector2f(infoText.getGlobalBounds().width / 2, infoText.getGlobalBounds().height / 2));
 	infoText.setPosition(sf::Vector2f(textSize + (target.getSize().x - textSize) / 2, textSize / 3));
 
@@ -485,6 +488,24 @@ void Board::enPassant(Piece* p, Coordinates c1, Coordinates c2)
 {
 	//delete piece from c2
 	//move piece p to c1
+
+	//check if next move is legal
+	//set captured in sim in piece on coord c2
+	Piece* pawn = NULL;
+	for (Piece* p : Piece::getInstances())
+	{
+		if (p->getPositionOnBoard() == c2)
+		{
+			pawn = p;
+			p->setCapturedInSim();
+		}
+	}
+
+	if (simulateNextMove(p, c1) == 0)
+	{
+		pawn->unsetCapturedInSim();
+		return;
+	}
 
 	//delete piece on coord c2
 	_b[c2.getY()][c2.getX()] = empty;
@@ -871,6 +892,12 @@ void Board::pawnPromotion(Coordinates c_pawn, Coordinates c_new)
 	
 	Piece* pawn = Piece::getPieceByCoords(c_pawn);
 	int color = pawn->pieceTypeToColor(pawn->getType());
+	
+	//check if next move is legal
+	if (simulateNextMove(pawn, c_new) == 0)
+	{
+		return;
+	}
 
 	//delete old piece if there was a capture:
 	for (Piece* p : Piece::getInstances())

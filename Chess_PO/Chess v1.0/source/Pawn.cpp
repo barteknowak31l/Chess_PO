@@ -86,7 +86,10 @@ bool Pawn::isMoveLegal(Coordinates c)
 		{
 
 			//check +2 move
-			if (c.getY() - positionOnBoard.getY() == 2 && c.getX() - positionOnBoard.getX() == 0 && Board::getPieceTypeOnGivenCoords(c) == empty)
+			Coordinates cc;
+			cc.setX(c.getX());
+			cc.setY(c.getY()-1);
+			if (c.getY() - positionOnBoard.getY() == 2 && c.getX() - positionOnBoard.getX() == 0 && Board::getPieceTypeOnGivenCoords(c) == empty && Board::getPieceTypeOnGivenCoords(cc) == empty)
 			{
 				firstMove = false;
 				enPassantable = 1;
@@ -152,7 +155,10 @@ bool Pawn::isMoveLegal(Coordinates c)
 		{
 
 			//check +2 move
-			if (positionOnBoard.getY() - c.getY() == 2 && c.getX() - positionOnBoard.getX() == 0 && Board::getPieceTypeOnGivenCoords(c) == empty)
+			Coordinates cc;
+			cc.setX(c.getX());
+			cc.setY(c.getY() + 1);
+			if (positionOnBoard.getY() - c.getY() == 2 && c.getX() - positionOnBoard.getX() == 0 && Board::getPieceTypeOnGivenCoords(c) == empty && Board::getPieceTypeOnGivenCoords(cc) == empty)
 			{
 				firstMove = false;
 				enPassantable = 1;
@@ -409,7 +415,10 @@ void Pawn::addRemainingPossibleMoves()
 
 			//check +2 move
 			tmp.setY(positionOnBoard.getY() + 2);
-			if (Board::getPieceTypeOnGivenCoords(tmp) == empty)
+			Coordinates cc;
+			cc.setX(tmp.getX());
+			cc.setY(tmp.getY() - 1);
+			if (Board::getPieceTypeOnGivenCoords(tmp) == empty && Board::getPieceTypeOnGivenCoords(cc) == empty)
 			{
 				addCoordsToSet(tmp);
 			}
@@ -433,8 +442,11 @@ void Pawn::addRemainingPossibleMoves()
 		{
 
 			//check +2 move
+			Coordinates cc;
+			cc.setX(tmp.getX());
+			cc.setY(tmp.getY() + 1);
 			tmp.setY(positionOnBoard.getY() - 2);
-			if (Board::getPieceTypeOnGivenCoords(tmp) == empty)
+			if (Board::getPieceTypeOnGivenCoords(tmp) == empty && Board::getPieceTypeOnGivenCoords(cc) == empty)
 			{
 				addCoordsToSet(tmp);
 			}

@@ -131,6 +131,8 @@ void eventHandler(sf::RenderWindow& window)
                 window.setSize(sf::Vector2u(sizeX, sizeY));
             }
 
+
+
             //for appropriate window scaling
             sf::FloatRect view(0, 0, event.size.width, event.size.height);
             window.setView(sf::View(view));
@@ -194,7 +196,7 @@ void config()
                 break;
             }
 
-            if ((pos = line.find(options[j])) != std::string::npos)
+            if ((pos = line.find(options[j])) != std::string::npos) //find returns npos when nothing found
             {
                 line.erase(pos, options[j].length());
 

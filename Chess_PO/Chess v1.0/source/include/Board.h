@@ -3,8 +3,8 @@
 
 #include "coordinates.h"
 #include "utils.h"
-#include <SFML\Graphics.hpp>
-#include <SFML\Window.hpp>
+#include "SFML\Graphics.hpp"
+#include "SFML\Window.hpp"
 
 class Piece;
 class Pawn;
